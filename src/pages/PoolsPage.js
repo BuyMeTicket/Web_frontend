@@ -129,12 +129,12 @@ const Pools = () => {
                       <p className="text-body-secondary m-0">
                         {pool.startTime.split('T')[0]} <br />~ {pool.endTime.split('T')[0]}
                       </p>
-                      <a
-                        href={`/pool/${pool._id}`}
+                      <Link
+                        to={`/pool/${pool._id}`}
                         className={`btn btn-${pool.startSelling ? 'success' : 'primary'}`}
                       >
                         {pool.startSelling ? '募資中' : '檢視募資活動'}
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>

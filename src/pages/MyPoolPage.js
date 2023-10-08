@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { instance } from '../api'
 import { useAddress, useContract } from '@thirdweb-dev/react'
+import { Link } from 'react-router-dom'
 import {
   CCardHeader,
   CButton,
@@ -165,12 +166,12 @@ const MyPool = () => {
                           <CButton className="btn btn-warning mb-1 p-1">
                             開始募資
                           </CButton>)}
-                        {<a
-                          href={`/Pool/${pool._id}`}
+                        {<Link
+                          to={`/Pool/${pool._id}`}
                           className={`btn btn-${during ? 'success' : 'primary'} p-1`}
                         >
                           {during ? '募資中' : '檢視募資活動'}
-                        </a>
+                        </Link>
                         }
                       </div>
                     </div>

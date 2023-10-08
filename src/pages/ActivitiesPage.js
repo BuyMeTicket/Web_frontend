@@ -126,12 +126,12 @@ const Activities = () => {
                         {/* <p className="text-body-secondary m-0">
                         {activity.date.split('T')[0]}
                       </p> */}
-                        <a
-                          href={`/activity/${activity._id}`}
+                        <Link
+                          to={`/activity/${activity._id}`}
                           className={`btn btn-${activity.startSelling ? 'success' : 'primary'}`}
                         >
                           {activity.startSelling ? '開賣中' : '檢視活動'}
-                        </a>
+                        </Link>
                       </CCol>
                     </div>
                   </div>

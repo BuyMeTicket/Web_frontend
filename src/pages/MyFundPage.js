@@ -11,6 +11,7 @@ import {
     CModalBody,
     CModalFooter,
 } from '@coreui/react'
+import {Link} from 'react-router-dom'
 import Spinner from '../components/Spinner'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -186,12 +187,12 @@ const MyFund = () => {
                                                         募資中
                                                     </a>
                                                 ) : (
-                                                    (isTarget ? <a
-                                                        href={`/Pool/${pool._id}`}
+                                                    (isTarget ? <Link
+                                                        to={`/Pool/${pool._id}`}
                                                         className='btn btn-primary p-1'
                                                     >
                                                         檢視活動
-                                                    </a> :
+                                                    </Link> :
                                                         <button key={pool._id} className='btn btn-success' onClick={() => {
                                                             openModal(pool)
                                                         }}>
