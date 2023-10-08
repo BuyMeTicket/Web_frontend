@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAddress, useContract, Web3Button } from "@thirdweb-dev/react";
 import Swal from 'sweetalert2';
 import { TICKET_FACTORY_ADDRESS, TOKEN_ADDRESS } from '../const/contractAddress';
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams,Navigate } from 'react-router-dom'
 import { instance } from '../api'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -51,7 +51,7 @@ const ActivityPage = () => {
     await Ticket_Factory_Contract.call("mintEventTicket", [eventId, ticketName, quantity]);
     let noNft = ticket
     delete noNft.nft
-    instance.post('/ticket/buy', { data: { ...noNft, owner: address, activity: id }, quantity }).then((res) => {
+    await instance.post('/ticket/buy', { data: { ...noNft, owner: address, activity: id }, quantity }).then((res) => {
       setIsModal(false)
       setQuantity(0)
     })
@@ -104,15 +104,15 @@ const ActivityPage = () => {
                 showConfirmButton: false,
                 timer: 1500
               })
-              closeModal()
-              window.location.href = '/Ticket/Own'
+              closeModal();
+              <Navigate to="/Ticket/Own" />
             }}
             onError={() => {
               Swal.fire({
                 icon: 'error',
                 title: 'Mint failed',
               })
-              closeModal()
+              closeModal();
             }}
             isDisabled={quantity === 0}
           >
