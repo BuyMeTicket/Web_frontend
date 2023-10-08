@@ -3,7 +3,7 @@ import { useAddress } from "@thirdweb-dev/react";
 import { instance } from '../api'
 import Swal from 'sweetalert2';
 import * as Passwordless from "@passwordlessdev/passwordless-client";
-import { BACKEND_URL, API_KEY, API_URL } from "../const/backend";
+import {API_KEY, API_URL } from "../const/backend";
 function WhitelistPage() {
     const address = useAddress();
     console.log("Using API key: " + API_KEY);
@@ -27,11 +27,7 @@ function WhitelistPage() {
             apiUrl: API_URL,
             apiKey: API_KEY
         });
-
         // Create token - Call your node backend to retrieve a token that we can use client-side to register a passkey to an alias
-        // const backendRequest = await fetch(
-        //     BACKEND_URL + "/create-token?alias=" + alias
-        // );
         const backendRequest = await instance.get('/create-token', { params: { alias: alias } })
         const backendResponse = await backendRequest.json();
         if (!backendRequest.ok) {
@@ -83,7 +79,7 @@ function WhitelistPage() {
             })
             return;
         }
-        const user = await fetch(BACKEND_URL + "/verify-signin?token=" + token).then((r) => r.json());
+        const user = instance.post("/verify-signin?token=" + token).then((r) => r.json());
         if (user.success === true) {
             Swal.fire({
                 icon: 'success',

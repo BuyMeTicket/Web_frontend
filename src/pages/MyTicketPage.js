@@ -61,7 +61,7 @@ function MyTicketPage() {
             })
             return;
         }
-        const user = await fetch(BACKEND_URL + "/verify-signin?token=" + token).then((r) => r.json());
+        const user = instance.post("/verify-signin?token=" + token).then((r) => r.json());
         if (user.success !== true) {
             return;
             //add address to backend whitelist
