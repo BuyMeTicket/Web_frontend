@@ -16,7 +16,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import { useAddress, useContract, Web3Button } from "@thirdweb-dev/react";
 import { TICKET_FACTORY_ADDRESS } from '../const/contractAddress';
 import { instance } from '../api';
-import { BACKEND_URL, API_KEY } from '../const/backend';
+import { API_KEY } from '../const/backend';
 import Spinner from '../components/Spinner';
 import CountdownTimer from '../components/countdownTimer';
 let expireTimeout = null;
