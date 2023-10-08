@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+html,
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  color: #e7e8e8;
+  background: #070707;
+  background-image: url(../assets/images/home_bg.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.item-card {
+  min-width: 45vh;
+  max-width: 45vh;
+  margin: auto;
+}
+
+.item-card h3 {
+  inline-size: fit-content;
+  margin-right: 1rem;
+}
