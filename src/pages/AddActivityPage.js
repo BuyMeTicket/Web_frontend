@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import{useNavigate} from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader } from '@coreui/react'
 import { formDataInstance } from '../api';
@@ -38,6 +39,7 @@ function updateImageUri(uri, name, ticketType, ticketDescription) {
   }
 }
 const AddActivity = () => {
+  const navigate = useNavigate();
   const { mutateAsync: upload } = useStorageUpload();
   const [act, setAct] = useState(activityTemplate);
   const [tickets, setTickets] = useState([ticketTemplate]);
@@ -154,7 +156,7 @@ const AddActivity = () => {
       .then(res => {
         alert("Activity created successfully");
         setLoading(false);
-        window.location.href = '/activities'
+        navigate('/activities')
       })
       .catch(err => console.log("error in create activity", err))
   };

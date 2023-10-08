@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAddress, useContract, Web3Button } from "@thirdweb-dev/react";
 import Swal from 'sweetalert2';
 import { TICKET_FACTORY_ADDRESS, TOKEN_ADDRESS } from '../const/contractAddress';
-import { Link, useParams,Navigate } from 'react-router-dom'
+import { Link, useParams,useNavigate } from 'react-router-dom'
 import { instance } from '../api'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -16,6 +16,7 @@ import {
 import Spinner from '../components/Spinner';
 
 const ActivityPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams()
   const address = useAddress()
   const [activity, setActivity] = useState(null)
@@ -105,7 +106,7 @@ const ActivityPage = () => {
                 timer: 1500
               })
               closeModal();
-              <Navigate to="/Ticket/Own" />
+              navigate("/Ticket/Own");
             }}
             onError={() => {
               Swal.fire({

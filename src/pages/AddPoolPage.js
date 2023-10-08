@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { formDataInstance } from '../api'
 import { useAddress, useContract } from '@thirdweb-dev/react'
 import { FUNDING_POOL_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
@@ -13,6 +14,7 @@ const poolTemplate = {
 }
 
 const AddPool = () => {
+    const navigate = useNavigate();
     const [pool, setPool] = useState(poolTemplate)
     const [originalImage, setOriginalImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
@@ -70,7 +72,7 @@ const AddPool = () => {
         try {
             formDataInstance.post('/pool/add', data).then((res) => {
                 alert("Pool added");
-                window.location.href = '/pool/own';
+                navigate('/pool/own');
             });
         } catch (error) {
             alert(error.message);

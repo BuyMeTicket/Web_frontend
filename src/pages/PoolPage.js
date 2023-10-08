@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams,useNavigate } from 'react-router-dom'
 import { instance } from '../api'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -13,6 +13,7 @@ import { USDT_ADDRESS } from '../const/contractAddress'
 import { useAddress, useContract, useContractRead } from '@thirdweb-dev/react'
 
 const PoolPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams()
   const donator = useAddress()
   const [pool, setPool] = useState(null)
@@ -47,7 +48,7 @@ const PoolPage = () => {
     try {
       instance.post('/pool/donate', { _id: id, amount: Number(amount), donator }).then((res) => {
         alert(`已捐出$${amount}USDT`)
-        window.location.href = '/pool/' + id;
+        navigate('/pool/' + id)
       })
     } catch (error) {
       console.log(error)

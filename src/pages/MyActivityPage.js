@@ -11,6 +11,7 @@ import {
   CModalBody,
   CModalFooter,
 } from '@coreui/react'
+import { useNavigate } from 'react-router-dom'
 import { QrReader } from 'react-qr-reader';
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -18,6 +19,7 @@ import Spinner from '../components/Spinner';
 import AddCircle from '../components/AddCircle'
 const MyActivity = () => {
   const address = useAddress()
+  const navigate = useNavigate();
   // const [keywords, setKeywords] = useState('')
   const [activities, setActivities] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -55,7 +57,7 @@ const MyActivity = () => {
         console.log(res.data);
         if (res.data === 'Ticket used.') {
           // Redirect to ticketpage
-          window.location.href = '/Ticket/Own';
+          navigate('/Ticket/Own');
         }
       })
       .catch(error => {
