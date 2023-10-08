@@ -1,5 +1,6 @@
 /*global ethereum*/
 import React, { useState, useEffect } from 'react';
+import { backend_uri } from '../api';
 import * as Passwordless from "@passwordlessdev/passwordless-client";
 import {
     CModal,
@@ -47,6 +48,11 @@ function MyTicketPage() {
                 setLoading(false)
             })
     }
+    const handleSelectedTicket = async (ticket) => {
+        const encryptedData = await encrypt(ticket);
+        setQrCodeValue(encryptedData);
+        setSelectedTicket(ticket)
+    }
     const verifySignin = async () => {
         const alias = address;
         const p = new Passwordless.Client({
@@ -61,16 +67,29 @@ function MyTicketPage() {
             })
             return;
         }
-        const user = instance.post("/verify-signin?token=" + token).then((r) => r.json());
-        if (user.success !== true) {
-            return;
-            //add address to backend whitelist
+        try {
+            const response = await backend_uri.get("/verify-signin", {
+                params: {
+                    token: token
+                }
+            });
+            const user = response.data;
+            if (user.success === true) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Congratuation!! Get Whitelist!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                timer: 1500
+            })
         }
-    }
-    const handleSelectedTicket = async (ticket) => {
-        const encryptedData = await encrypt(ticket);
-        setQrCodeValue(encryptedData);
-        setSelectedTicket(ticket)
     }
     const showTicket = async (ticket) => {
         await verifySignin();

@@ -12,6 +12,11 @@ const instance = axios.create({
         "Content-Type": "application/json"
     }
 })
+const backend_uri = axios.create({
+    baseURL: "https://web-buymeticket.vercel.app/",
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
 
-
-export { formDataInstance, instance };
+export { formDataInstance, instance,backend_uri };

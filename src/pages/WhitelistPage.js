@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAddress } from "@thirdweb-dev/react";
-import { instance } from '../api'
+import { instance,backend_uri } from '../api'
 import Swal from 'sweetalert2';
 import * as Passwordless from "@passwordlessdev/passwordless-client";
 import {API_KEY, API_URL } from "../const/backend";
@@ -9,7 +9,7 @@ function WhitelistPage() {
     console.log("Using API key: " + API_KEY);
     const handleWhitelist = async (e) => {
         try {
-            const response = instance.post('/user/add', { user: address })
+            const response = await instance.post('/user/add', { user: address })
             console.log(address);
 
             if (response) {
@@ -28,9 +28,10 @@ function WhitelistPage() {
             apiKey: API_KEY
         });
         // Create token - Call your node backend to retrieve a token that we can use client-side to register a passkey to an alias
-        const backendRequest = await instance.get('/create-token', { params: { alias: alias } })
-        const backendResponse = await backendRequest.json();
-        if (!backendRequest.ok) {
+        const backendRequest = await backend_uri.get('/create-token', { params: { alias: alias } })
+        console.log(backendRequest);
+        const backendResponse = backendRequest.data;
+        if (!backendRequest.status===200) {
             console.log("Our backend failed while creating a token!")
             return;
         }
@@ -79,17 +80,24 @@ function WhitelistPage() {
             })
             return;
         }
-        const user = instance.post("/verify-signin?token=" + token).then((r) => r.json());
-        if (user.success === true) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Congratuation!! Get Whitelist!',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            //add address to backend whitelist
-            handleWhitelist();
-        } else {
+        try {
+            const response = await backend_uri.get("/verify-signin", {
+                params: {
+                    token: token
+                }
+            });
+            const user = response.data;
+            if (user.success === true) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Congratuation!! Get Whitelist!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                //add address to backend whitelist
+                handleWhitelist();
+            }
+        } catch (error) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
