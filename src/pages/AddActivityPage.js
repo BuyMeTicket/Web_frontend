@@ -19,6 +19,7 @@ const activityTemplate = {
 const ticketTemplate = {
   name: '',
   price: 0,
+  uri: '',
   totalAmount: 0,
   soldAmount: 0,
 }
@@ -100,9 +101,6 @@ const AddActivity = () => {
       } else {
         data.append(key, act[key]);
       }
-    }
-    for (let i = 0; i < nfts.length; i++) {
-      data.append('files[]', nfts[i]);
     }
     console.log(nfts);
     const uploadJson = [];
