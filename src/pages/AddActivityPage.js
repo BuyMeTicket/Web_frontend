@@ -108,7 +108,8 @@ const AddActivity = () => {
     const uploadJson = [];
     const uris = await upload({ data: nfts });
     for (let i = 0; i < uris.length; i++) {
-      const urii = 'https://ipfs.io/ipfs/' + uris[i].split('/')[2] + '/' + uris[i].split('/')[3];
+      const urii = 'https://ipfs.io/ipfs/' + uris[i].split('/')[2] + '/' + uris[i].split('/')[3]; 
+      tickets[i].uri = urii;
       const json = updateImageUri(urii, act.title, tickets[i].name, tickets[i].description);
       const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
       const formData = new File([blob], `${i}.json`, { type: "application/json" });
