@@ -51,7 +51,7 @@ const ActivityPage = () => {
 
     await Ticket_Factory_Contract.call("mintEventTicket", [eventId, ticketName, quantity]);
     let noNft = ticket
-    delete noNft.nft
+    delete noNft.uri
     await instance.post('/ticket/buy', { data: { ...noNft, owner: address, activity: id }, quantity }).then((res) => {
       setIsModal(false)
       setQuantity(0)
@@ -77,7 +77,7 @@ const ActivityPage = () => {
           <CForm>
             <div className="mb-3">
               <h5>您欲購買的是： {ticket && ticket.name} {ticket && `NT$${ticket.price}`}</h5>
-              <img src={ticket && ticket.nft} alt="nft" className="img-fluid mb-3" width='auto' style={{ maxHeight: '40rem' }} />
+              <img src={ticket && ticket.uri} alt="nft" className="img-fluid mb-3" width='auto' style={{ maxHeight: '40rem' }} />
               <br />
               <label className="form-label">數量</label>
               <input type="number" className="form-control" placeholder="請輸入欲購買的數量" onChange={handleQuantityChange} />

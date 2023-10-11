@@ -134,13 +134,14 @@ const MyFund = () => {
                         const during = new Date() > new Date(pool.startTime) && new Date() < new Date(pool.endTime)
                         const isTarget = percentage(pool.currentPrice, pool.targetPrice) >= 100
                         return (
-                            <div className="item-card" style={{ height: '28rem' }} key={pool.id}>
+                            <div className="item-card" key={pool.id}>
                                 <div className="card shadow-sm h-100">
                                     <img src={pool.image} alt="主視覺" className="card-img" height="250" />
                                     <div className="card-body d-flex flex-column justify-content-between">
                                         <div className="d-flex justify-content-between">
                                             <CCol xs={7} className='p-0' >
                                                 <h4>
+                                                    {/* {pool.title.length > 12 ? pool.title.substring(0, 12) + ' ...' : pool.title} */}
                                                     {pool.title}
                                                     <>{' '}</>
                                                     <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer">

@@ -126,7 +126,8 @@ const MyPool = () => {
                           <>{' '}</>
                           <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer">
                             <CIcon icon={cilLink} size='lg' />
-                          </a></h4>
+                          </a>
+                        </h4>
                         <p style={{
                           fontFamily: 'Arial, sans-serif',
                           fontSize: '16px',
