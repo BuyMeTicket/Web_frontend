@@ -7,7 +7,6 @@ import {
     CNavLink,
     CImage
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
 import logo from '../assets/images/logo.png'
 import { NavLink } from 'react-router-dom'
 import SimpleBar from 'simplebar-react'
