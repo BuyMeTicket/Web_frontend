@@ -54,7 +54,8 @@ const Navbar = () => {
                   side: "bottom",
                   align: "center",
                 }}
-                />
+                switchToActiveChain={true}
+              />
             </div>
             {address &&
               <CHeaderNav className="ms-3 d-block">
