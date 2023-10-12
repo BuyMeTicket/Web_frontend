@@ -19,7 +19,6 @@ const activityTemplate = {
 const ticketTemplate = {
   name: '',
   price: 0,
-  uri: '',
   totalAmount: 0,
   soldAmount: 0,
 }
