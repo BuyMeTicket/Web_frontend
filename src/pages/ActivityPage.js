@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAddress, useContract, Web3Button } from "@thirdweb-dev/react";
 import Swal from 'sweetalert2';
-import { TICKET_FACTORY_ADDRESS, TOKEN_ADDRESS } from '../const/contractAddress';
+import { TICKET_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
 import { Link, useParams,useNavigate } from 'react-router-dom'
 import { instance } from '../api'
 import CIcon from '@coreui/icons-react'
@@ -23,7 +23,7 @@ const ActivityPage = () => {
   const [isModal, setIsModal] = useState(false)
   const [ticket, setTicket] = useState(null)
   const [quantity, setQuantity] = useState(0)
-  const { contract: Token_Contract } = useContract(TOKEN_ADDRESS);
+  const { contract: Token_Contract } = useContract(USDT_ADDRESS);
   const { contract: Ticket_Factory_Contract } = useContract(TICKET_FACTORY_ADDRESS);
   const getActivity = async () => {
     try {

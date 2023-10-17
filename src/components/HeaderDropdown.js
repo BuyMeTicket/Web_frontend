@@ -56,6 +56,10 @@ const AppHeaderDropdown = () => {
           {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
           My Fund
         </CDropdownItem>
+        <CDropdownItem component={Link} to="/Faucet">
+          {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
+          Token Faucet
+        </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem onClick={disconnect}>
           {/* <CIcon icon="cil-lock-locked" name="cil-lock-locked" className="me-2" /> */}
@@ -77,6 +81,10 @@ const AppHeaderDropdown = () => {
         <CDropdownItem component={Link} to="/Pool/Fund">
           {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
           My Fund
+        </CDropdownItem>
+        <CDropdownItem component={Link} to="/Faucet">
+          {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
+          Token Faucet
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem onClick={disconnect}>
