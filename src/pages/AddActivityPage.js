@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import{useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
-import { CButton, CModal, CModalBody, CModalFooter, CModalHeader } from '@coreui/react'
+import { CButton, CModal, CModalBody, CModalFooter, CModalHeader,CAlert } from '@coreui/react'
+import { cilWarning } from '@coreui/icons';
 import { formDataInstance } from '../api';
 import { useAddress, useContract } from '@thirdweb-dev/react'
 import { TICKET_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
@@ -85,7 +86,21 @@ const AddActivity = () => {
     };
     reader.readAsDataURL(file);
   }
-
+  const allFieldsFilled = () => {
+    for (let key in act) {
+      if (act[key] === undefined || act[key] === '') {
+        return false;
+      }
+    }
+    for (let ticket of tickets) {
+      for (let key in ticket) {
+        if (ticket[key] === undefined || ticket[key] === '') {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -105,7 +120,7 @@ const AddActivity = () => {
     const uploadJson = [];
     const uris = await upload({ data: nfts });
     for (let i = 0; i < uris.length; i++) {
-      const urii = 'https://ipfs.io/ipfs/' + uris[i].split('/')[2] + '/' + uris[i].split('/')[3]; 
+      const urii = 'https://ipfs.io/ipfs/' + uris[i].split('/')[2] + '/' + uris[i].split('/')[3];
       tickets[i].uri = urii;
       const json = updateImageUri(urii, act.title, tickets[i].name, tickets[i].description);
       const blob = new Blob([JSON.stringify(json, null, 2)], { type: "application/json" });
@@ -230,15 +245,21 @@ const AddActivity = () => {
             setTickets([...tickets, ticketTemplate])
           }}>+</CButton><br />
           <div className="form-group">
+
             <input
               type="submit"
               value="Create Activity"
               className="btn btn-primary my-3"
+              disabled={!allFieldsFilled()}
             />
             <>{'  '}</>
             <CButton color="info" className="btn btn-success my-3" onClick={togglePreview}>
               Preview
             </CButton>
+            { !allFieldsFilled() &&<CAlert color="warning" className="d-flex align-items-center">
+              <CIcon icon={cilWarning} className="flex-shrink-0 me-2" width={24} height={24} />
+              <div>Please complete all the fields</div>
+            </CAlert>}
           </div>
 
 

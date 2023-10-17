@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import CIcon from '@coreui/icons-react'
 import { useNavigate } from 'react-router-dom';
 import { formDataInstance } from '../api'
 import { useAddress, useContract } from '@thirdweb-dev/react'
 import { FUNDING_POOL_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
-import { CModal, CModalBody, CButton, CModalFooter, CModalHeader } from '@coreui/react';
+import { CModal, CModalBody, CButton, CModalFooter, CModalHeader, CAlert } from '@coreui/react';
+import { cilWarning } from '@coreui/icons';
 const poolTemplate = {
     title: '',
     description: '',
@@ -39,7 +41,17 @@ const AddPool = () => {
         };
         reader.readAsDataURL(file);
     }
-
+    const datesetting = () => {
+        return new Date(pool.startTime).getTime() > new Date().getTime() && new Date(pool.endTime).getTime() > new Date(pool.startTime).getTime()
+    }
+    const allFieldsFilled = () => {
+        for (let key in pool) {
+            if (pool[key] === undefined || pool[key] === ''|| pool[key] === 0) {
+                return false;
+            }
+        }
+        return true;
+    };
     const onSubmit = async (e) => {
         e.preventDefault();
         const data = new FormData()
@@ -61,7 +73,7 @@ const AddPool = () => {
         const endTimestamp = _endTimestamp.getTime() / 1000
         const _targetPrice = pool.targetPrice //mock targetPrice
         console.log(_asset, address, startTimestamp, endTimestamp, _targetPrice)
-        const result = await pool_factory_address.call("createPool", [_asset, startTimestamp, endTimestamp, _targetPrice*10000]);
+        const result = await pool_factory_address.call("createPool", [_asset, startTimestamp, endTimestamp, _targetPrice * 10000]);
         console.info(result);
         console.info(result.receipt.events);
         console.log(JSON.stringify(result))
@@ -108,11 +120,20 @@ const AddPool = () => {
                         type="submit"
                         value="Create Pool"
                         className="btn btn-primary my-3"
+                        disabled={!allFieldsFilled()||!datesetting()}
                     />
                     <>{'  '}</>
                     <CButton color="info" className="btn btn-success my-3" onClick={togglePreview}>
                         Preview
                     </CButton>
+                    {!allFieldsFilled() ? <CAlert color="warning" className="d-flex align-items-center">
+                        <CIcon icon={cilWarning} className="flex-shrink-0 me-2" width={24} height={24} />
+                        <div>Please complete all the fields</div>
+                    </CAlert>:<>{!datesetting() && <CAlert color="warning" className="d-flex align-items-center">
+                        <CIcon icon={cilWarning} className="flex-shrink-0 me-2" width={24} height={24} />
+                        <div>Ensure the startTime is in the future and the endTime is after the startTime.</div>
+                    </CAlert>}</>}
+                    
                 </div>
 
                 <CModal size="lg" visible={showPreview} onDismiss={togglePreview} alignment="center" className='text-black'>

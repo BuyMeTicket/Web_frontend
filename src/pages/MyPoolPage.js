@@ -11,6 +11,7 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
+  CProgress,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -138,7 +139,6 @@ const MyPool = () => {
                           fontFamily: 'Arial, sans-serif',
                           fontSize: '16px',
                           color: '#ffffff',
-                          /*bavkground yellow*/
                           backgroundColor: getColorByPercentage(percentage(pool.currentPrice, pool.targetPrice)),
                           padding: '5px 10px',
                           borderRadius: '10px',
