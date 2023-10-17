@@ -6,7 +6,7 @@ function FaucetPage() {
     const address = useAddress();
     const { contract: usdt_contract } = useContract(USDT_ADDRESS);
     const getUSDT = async () => {
-        await usdt_contract.call("freeMint", [address, 10000000]);
+        await usdt_contract.call("mint", [address, 10000000]);
     }
     const addMetaMask = async (address) => {
         try {
