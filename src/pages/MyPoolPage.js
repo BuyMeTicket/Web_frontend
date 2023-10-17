@@ -41,6 +41,11 @@ const MyPool = () => {
     }
     return parseFloat(value);
   }
+  function canWithdrawing(value, target) {
+    const a = parseKValue(value)
+    const b = parseKValue(target)
+    return a >= b;
+  }
   const percentage = (current, target) => {
     const currentPrice = parseKValue(current) || 0;
     const targetPrice = parseKValue(target) || 1;
@@ -67,8 +72,8 @@ const MyPool = () => {
         setLoading(false)
       })
   }
-  const stopFunding = async () => {
-    await pool_contract.call("stopFunding")
+  const withdrawing = async () => {
+    await pool_contract.call("withdraw")
     closeModal()
   }
   function getColorByPercentage(percentage) {
@@ -89,19 +94,19 @@ const MyPool = () => {
       {selectedPool && (
         <CModal size="l" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
           <CModalHeader onDismiss={closeModal}>
-            <CModalTitle>確定要停止募資活動嗎？</CModalTitle>
+            <CModalTitle>募資活動提款</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            您即將停止募資 {selectedPool.title}<br />
-            目前已經募資 {selectedPool.currentPrice} / {selectedPool.targetPrice}，達 {percentage(selectedPool.currentPrice, selectedPool.targetPrice)} % ，確認要放棄募資？<br />
-            停止募資後，目前募到的款項將全數退回捐獻者錢包，您無法收到任何捐款。
+            當前選擇募資：{selectedPool.title}<br />
+            目前已經募資 {selectedPool.currentPrice} / {selectedPool.targetPrice}，達 {percentage(selectedPool.currentPrice, selectedPool.targetPrice)} % <br />
+            結束募資後，您將收到所有募資金額
           </CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={closeModal}>
               回到上一頁
             </CButton>
-            <CButton color="danger" onClick={stopFunding}>
-              確認停止募資
+            <CButton color="danger" onClick={withdrawing}>
+              提款
             </CButton>
           </CModalFooter>
         </CModal>
@@ -114,6 +119,7 @@ const MyPool = () => {
           <AddCircle url={'/pool/Add'} />
           {pools.length === 0 ? <h1 className='text-center'>Pools not found</h1> : pools.map((pool, index) => {
             const during = new Date() > new Date(pool.startTime) && new Date() < new Date(pool.endTime)
+            const finish = new Date() > new Date(pool.endTime)
             return (
               <div className='item-card' key={pool.id}>
                 <div className="card shadow-sm h-100">
@@ -159,14 +165,14 @@ const MyPool = () => {
                         </p>
                       </div>
                       <div className='d-flex flex-column'>
-                        {during ? (
+                        {finish && (canWithdrawing(pool.currentPrice, pool.targetPrice) ? (
                           <CButton className="btn btn-danger mb-1 p-1" onClick={() => openModal(pool)}>
-                            停止募資
+                            提款
                           </CButton>
                         ) : (
                           <CButton className="btn btn-warning mb-1 p-1">
-                            開始募資
-                          </CButton>)}
+                            募資失敗
+                          </CButton>))}
                         {<Link
                           to={`/Pool/${pool._id}`}
                           className={`btn btn-${during ? 'success' : 'primary'} p-1`}
