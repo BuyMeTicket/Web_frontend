@@ -76,7 +76,7 @@ const ActivityPage = () => {
         <CModalBody>
           <CForm>
             <div className="mb-3">
-              <h5>您欲購買的是： {ticket && ticket.name} {ticket && `NT$${ticket.price}`}</h5>
+              <h5>您欲購買的是： {ticket && ticket.name} {ticket && `USDT $${ticket.price}`}</h5>
               <img src={ticket && ticket.nft} alt="nft" className="img-fluid mb-3" width='auto' style={{ maxHeight: '40rem' }} />
               <br />
               <label className="form-label">數量</label>

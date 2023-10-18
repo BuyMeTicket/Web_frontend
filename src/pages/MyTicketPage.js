@@ -217,7 +217,7 @@ function MyTicketPage() {
                         return (
                             <div className='item-card' key={ticket._id}>
                                 <div className="card shadow-sm h-100">
-                                    <img src={ticket.nft} alt='nft' className="card-img" height="250" />
+                                    <img src={ticket && ticket.nft} alt={ticket} className="card-img" height="250" />
                                     <div className="card-body d-flex flex-column justify-content-between">
                                         <h4 className='m-0'>
                                             <b>{ticket.activity.title} </b>
