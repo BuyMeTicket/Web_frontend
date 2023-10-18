@@ -168,7 +168,7 @@ const AddActivity = () => {
     }
     const _eventId = await Ticket_Factory_Contract.call("eventNameToId", [act.title])
     data.eventAddress=targetAddress
-    data.eventId=_eventId
+    data.eventId=_eventId?.toString()
     console.log(data);
     await instance.post('/activity/add', data)
       .then(res => {
