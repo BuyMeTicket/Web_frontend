@@ -80,7 +80,7 @@ const PoolPage = () => {
       await pool_contract.call("deposit", [Number(amount * 10000)]);
 
       setCurrentPhase('process');
-      const res = await instance.post('/pool/donate', { _id: id, amount: Number(amount), donator });
+      await instance.post('/pool/donate', { _id: id, amount: Number(amount), donator });
 
       Swal.fire({
         icon: 'success',
