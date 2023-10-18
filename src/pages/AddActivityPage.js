@@ -105,7 +105,7 @@ const AddActivity = () => {
     e.preventDefault();
     setLoading(true);
     let data = { ...act };
-    data.append('holder', address);
+    data.holder=address;
     for (let key in act) {
       if (act[key] === undefined) {
         alert("Please fill all the fields");
