@@ -77,7 +77,7 @@ const ActivityPage = () => {
           <CForm>
             <div className="mb-3">
               <h5>您欲購買的是： {ticket && ticket.name} {ticket && `NT$${ticket.price}`}</h5>
-              <img src={ticket && ticket.uri} alt="nft" className="img-fluid mb-3" width='auto' style={{ maxHeight: '40rem' }} />
+              <img src={ticket && ticket.nft} alt="nft" className="img-fluid mb-3" width='auto' style={{ maxHeight: '40rem' }} />
               <br />
               <label className="form-label">數量</label>
               <input type="number" className="form-control" placeholder="請輸入欲購買的數量" onChange={handleQuantityChange} />
