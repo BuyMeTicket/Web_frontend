@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import CIcon from '@coreui/icons-react'
 import { useNavigate } from 'react-router-dom';
-import { formDataInstance } from '../api'
+import { instance } from '../api'
 import { useAddress, useContract } from '@thirdweb-dev/react'
 import { FUNDING_POOL_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
 import { CModal, CModalBody, CButton, CModalFooter, CModalHeader, CAlert } from '@coreui/react';
 import { cilWarning } from '@coreui/icons';
+import { useStorageUpload } from "@thirdweb-dev/react";
+
 const poolTemplate = {
     title: '',
     description: '',
@@ -17,6 +19,7 @@ const poolTemplate = {
 
 const AddPool = () => {
     const navigate = useNavigate();
+    const { mutateAsync: upload } = useStorageUpload();
     const [pool, setPool] = useState(poolTemplate)
     const [originalImage, setOriginalImage] = useState(null)
     const [imagePreview, setImagePreview] = useState(null)
@@ -46,7 +49,7 @@ const AddPool = () => {
     }
     const allFieldsFilled = () => {
         for (let key in pool) {
-            if (pool[key] === undefined || pool[key] === ''|| pool[key] === 0) {
+            if (pool[key] === undefined || pool[key] === '' || pool[key] === 0) {
                 return false;
             }
         }
@@ -54,16 +57,19 @@ const AddPool = () => {
     };
     const onSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData()
+        let data = { ...pool }; 
         for (let key in pool) {
             if (pool[key] === undefined) {
                 alert("Please fill all the fields");
                 return;
             }
             if (key === 'image' && originalImage !== null) {
-                data.append('file', originalImage);
+                const uri = await upload({ data: [originalImage] });
+                const urii = 'https://ipfs.io/ipfs/' + uri[0].split('/')[2] + '/' + uri[0].split('/')[3];
+                console.log(urii)
+                data.image=urii;
             } else {
-                data.append(key, pool[key]);
+                data.key=pool[key];
             }
         }
         const _asset = USDT_ADDRESS //mock USDT address
@@ -79,10 +85,10 @@ const AddPool = () => {
         console.log(JSON.stringify(result))
         const value = result.receipt.events[0].args[1];
         console.log(value);
-        data.append('address', value)
-        data.append('holder', address);
+        data.address=value
+        data.holder=address;
         try {
-            formDataInstance.post('/pool/add', data).then((res) => {
+            await instance.post('/pool/add', data).then((res) => {
                 alert("Pool added");
                 navigate('/pool/own');
             });
@@ -120,7 +126,7 @@ const AddPool = () => {
                         type="submit"
                         value="Create Pool"
                         className="btn btn-primary my-3"
-                        disabled={!allFieldsFilled()||!datesetting()}
+                        disabled={!allFieldsFilled() || !datesetting()}
                     />
                     <>{'  '}</>
                     <CButton color="info" className="btn btn-success my-3" onClick={togglePreview}>
@@ -129,11 +135,11 @@ const AddPool = () => {
                     {!allFieldsFilled() ? <CAlert color="warning" className="d-flex align-items-center">
                         <CIcon icon={cilWarning} className="flex-shrink-0 me-2" width={24} height={24} />
                         <div>Please complete all the fields</div>
-                    </CAlert>:<>{!datesetting() && <CAlert color="warning" className="d-flex align-items-center">
+                    </CAlert> : <>{!datesetting() && <CAlert color="warning" className="d-flex align-items-center">
                         <CIcon icon={cilWarning} className="flex-shrink-0 me-2" width={24} height={24} />
                         <div>Ensure the startTime is in the future and the endTime is after the startTime.</div>
                     </CAlert>}</>}
-                    
+
                 </div>
 
                 <CModal size="lg" visible={showPreview} onDismiss={togglePreview} alignment="center" className='text-black'>

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
 import { CButton, CModal, CModalBody, CModalFooter, CModalHeader,CAlert } from '@coreui/react'
 import { cilWarning } from '@coreui/icons';
-import { formDataInstance } from '../api';
+import { instance } from '../api';
 import { useAddress, useContract } from '@thirdweb-dev/react'
 import { TICKET_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
 import { useStorageUpload } from "@thirdweb-dev/react";
@@ -104,21 +104,26 @@ const AddActivity = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const data = new FormData()
+    let data = { ...act };
+    data.append('holder', address);
     for (let key in act) {
       if (act[key] === undefined) {
         alert("Please fill all the fields");
         return;
       }
       if (key === 'image' && originalImage !== null) {
-        data.append('files[]', originalImage);
+        const uri = await upload({ data:[originalImage] });
+        const urii = 'https://ipfs.io/ipfs/' + uri[0].split('/')[2] + '/' + uri[0].split('/')[3];
+        console.log(urii)
+        data.image=urii;
       } else {
-        data.append(key, act[key]);
+        data.key=act[key];
       }
     }
     console.log(nfts);
     const uploadJson = [];
     const uris = await upload({ data: nfts });
+    //get the image's uri add to image's property and use it to produce json file for metadata
     for (let i = 0; i < uris.length; i++) {
       const urii = 'https://ipfs.io/ipfs/' + uris[i].split('/')[2] + '/' + uris[i].split('/')[3];
       console.log(urii)
@@ -129,14 +134,11 @@ const AddActivity = () => {
       console.log(formData);
       uploadJson.push(formData);
     }
+    data.tickets=JSON.stringify(tickets);
+    //upload json file
     const ipfsString = await upload({ data: uploadJson });
-    console.log(ipfsString);
     const baseIpfsUrl = 'https://ipfs.io/ipfs/' + ipfsString[0].split('/')[2] + '/';
     console.log(baseIpfsUrl);
-    console.log(JSON.stringify(tickets))
-    data.append('tickets', JSON.stringify(tickets));
-    // data.append('tickets',tickets);
-    data.append('holder', address);
     const _asset = USDT_ADDRESS //mock USDT address
     const _contractName = act.title //Event Name
     const _baseURI = baseIpfsUrl //TODO: enter URI
@@ -165,9 +167,10 @@ const AddActivity = () => {
       }
     }
     const _eventId = await Ticket_Factory_Contract.call("eventNameToId", [act.title])
-    data.append('eventAddress', targetAddress)
-    data.append('eventId', _eventId)
-    formDataInstance.post('/activity/add', data)
+    data.eventAddress=targetAddress
+    data.eventId=_eventId
+    console.log(data);
+    await instance.post('/activity/add', data)
       .then(res => {
         alert("Activity created successfully");
         setLoading(false);
