@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { useParams,useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { instance } from '../api'
+import Swal from 'sweetalert2';
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
 import {
@@ -8,6 +9,7 @@ import {
   CModalBody,
   CModalFooter,
   CButton,
+  CModalHeader,
 } from '@coreui/react'
 import { USDT_ADDRESS } from '../const/contractAddress'
 import { useAddress, useContract, useContractRead } from '@thirdweb-dev/react'
@@ -18,6 +20,7 @@ const PoolPage = () => {
   const donator = useAddress()
   const [pool, setPool] = useState(null)
   const [isModal, setIsModal] = useState(false)
+  const [currentPhase, setCurrentPhase] = useState(''); // '', 'approve', 'deposit', or 'process'
   const [amount, setAmount] = useState(0)
   const [contractAddress, setContractAddress] = useState('0xF5857Ef679be695c2dD22adC8D46ADdB41F6afa8');
   const getPool = async () => {
@@ -39,24 +42,94 @@ const PoolPage = () => {
   const { contract: pool_contract } = useContract(contractAddress); // Use the updated contractAddress
   const { data: totalDepositedAmount } = useContractRead(pool_contract, "totalDepositedAmount");
   console.log(totalDepositedAmount)
+  // const Donate = async (e) => {
+  //   e.preventDefault();
+  //   setIsModal(true)
+  //   setCurrentPhase('approve');
+  //   // Assuming you have a web3 instance and a contract instance already set up
+  //   await usdt_contract.call("approve", [pool.address, Number(amount * 10000)])
+  //   setCurrentPhase('deposit');
+  //   await pool_contract.call("deposit", [Number(amount * 10000)])
+  //   setCurrentPhase('process');
+  //   try {
+  //     await instance.post('/pool/donate', { _id: id, amount: Number(amount), donator }).then((res) => {
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: `已捐出$${amount}USDT`,
+  //         showConfirmButton: false,
+  //         timer: 1500
+  //       })
+  //       navigate('/pool/' + id)
+  //     })
+  //   } catch (error) {
+  //     console.log(error)
+  //   } finally {
+  //     setCurrentPhase(''); // Reset phase regardless of success or error
+  //     closeModal()
+  //   }
+  // }
   const Donate = async (e) => {
     e.preventDefault();
-    console.log(pool.address)
-    // Assuming you have a web3 instance and a contract instance already set up
-    await usdt_contract.call("approve", [pool.address, Number(amount * 10000)])
-    await pool_contract.call("deposit", [Number(amount * 10000)])
+    setIsModal(true);
+
     try {
-      instance.post('/pool/donate', { _id: id, amount: Number(amount), donator }).then((res) => {
-        alert(`已捐出$${amount}USDT`)
-        navigate('/pool/' + id)
-      })
+      setCurrentPhase('approve');
+      await usdt_contract.call("approve", [pool.address, Number(amount * 10000)]);
+
+      setCurrentPhase('deposit');
+      await pool_contract.call("deposit", [Number(amount * 10000)]);
+
+      setCurrentPhase('process');
+      const res = await instance.post('/pool/donate', { _id: id, amount: Number(amount), donator });
+
+      Swal.fire({
+        icon: 'success',
+        title: `已捐出$${amount}USDT`,
+        showConfirmButton: false,
+        timer: 1500
+      });
+      navigate('/pool/' + id);
     } catch (error) {
-      console.log(error)
+      switch (currentPhase) {
+        case 'approve':
+          Swal.fire({
+            icon: 'error',
+            title: 'Approval Failed',
+            text: 'There was an error during the approval process. Please try again.',
+            showConfirmButton: true
+          });
+          break;
+        case 'deposit':
+          Swal.fire({
+            icon: 'error',
+            title: 'Deposit Failed',
+            text: 'There was an error during the deposit process. Please try again.',
+            showConfirmButton: true
+          });
+          break;
+        case 'process':
+          Swal.fire({
+            icon: 'error',
+            title: 'Processing Failed',
+            text: 'There was an error processing your donation. Please try again.',
+            showConfirmButton: true
+          });
+          break;
+        default:
+          Swal.fire({
+            icon: 'error',
+            title: 'An Error Occurred',
+            text: 'Something went wrong. Please try again.',
+            showConfirmButton: true
+          });
+          break;
+      }
+    } finally {
+      setCurrentPhase(''); // Reset phase regardless of success or error
+      closeModal();
     }
   }
-  // const openModal = () => {
-  //   setIsModal(true)
-  // }
+
   const validsellTime = () => {
     const now = new Date()
     const start = new Date(pool.startTime)
@@ -75,8 +148,34 @@ const PoolPage = () => {
   }, [])
   return (
     <>
-      <CModal size="lg" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
+      <CModal size="md" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
+        <CModalHeader>
+          <strong>Transaction</strong>
+        </CModalHeader>
         <CModalBody>
+          {currentPhase && (
+            <div className="mb-3 text-center">
+              <strong>Please be patient, this may take a few moments.</strong>
+            </div>
+          )}
+          {currentPhase === 'approve' && (
+            <div className="d-flex justify-content-center align-items-center">
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span className="ml-2">Approving...</span>
+            </div>
+          )}
+          {currentPhase === 'deposit' && (
+            <div className="d-flex justify-content-center align-items-center">
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span className="ml-2">Depositing...</span>
+            </div>
+          )}
+          {currentPhase === 'process' && (
+            <div className="d-flex justify-content-center align-items-center">
+              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              <span className="ml-2">Processing...</span>
+            </div>
+          )}
         </CModalBody>
         <CModalFooter>
           <CButton

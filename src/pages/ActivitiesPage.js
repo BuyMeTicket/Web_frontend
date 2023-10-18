@@ -16,7 +16,6 @@ import {
   CInputGroup,
   CFormInput,
   CCol,
-  CBadge,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
