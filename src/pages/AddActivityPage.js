@@ -7,7 +7,7 @@ import { instance } from '../api';
 import { useAddress, useContract } from '@thirdweb-dev/react'
 import { TICKET_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
 import { useStorageUpload } from "@thirdweb-dev/react";
-import Spinner from "../components/Spinner";
+
 const activityTemplate = {
   title: '',
   description: '',
@@ -48,7 +48,6 @@ const AddActivity = () => {
   const [imagePreview, setImagePreview] = useState(null)
   const [nfts, setNfts] = useState([]);
   const [isModal, setIsModal] = useState(false)
-  const [loading, setLoading] = useState(false);
   const address = useAddress()
   const [quantity, setQuantity] = useState(0)
   const { contract: Ticket_Factory_Contract } = useContract(TICKET_FACTORY_ADDRESS);
@@ -103,7 +102,6 @@ const AddActivity = () => {
   };
   const onSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     let data = { ...act };
     data.holder=address;
     for (let key in act) {
@@ -173,7 +171,6 @@ const AddActivity = () => {
     await instance.post('/activity/add', data)
       .then(res => {
         alert("Activity created successfully");
-        setLoading(false);
         navigate('/activities')
       })
       .catch(err => console.log("error in create activity", err))
@@ -182,7 +179,6 @@ const AddActivity = () => {
   return (
     <div className="container w-50">
       <h3>Create New Activity</h3>
-      {loading ? <Spinner /> :
         <form onSubmit={onSubmit}>
           {
             Object.keys(activityTemplate).map((item, index) => {
@@ -348,7 +344,7 @@ const AddActivity = () => {
             </CModalFooter>
           </CModal>
 
-        </form>}
+        </form>
     </div>
   );
 };

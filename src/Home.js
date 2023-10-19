@@ -106,7 +106,7 @@ export default function Home() {
                     <br/>
                 </h1>
                 <p className="text-center fs-4">
-                    A brand-new ticket solution on chain, including auto-generated Smart Contract, NFT airdrop and Decentralized Funding Pool, to maximize your events!
+                    A brand-new ticket solution on chain, including auto-generated Smart Contract, NFT airdrop and Decentralized Fundraising Pool, to maximize your events!
                 </p>
                 <br/>
                 <div className='row d-flex justify-content-around mb-5'>
