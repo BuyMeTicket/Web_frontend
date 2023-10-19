@@ -24,7 +24,7 @@ const Searchbar = ({ setFunc }) => {
             <CFormInput
                 style={{ borderRadius: '2.5rem', backgroundColor: 'gray', border: 'none', maxWidth: '20rem', marginBottom: '-1rem' }}
                 type="search"
-                placeholder="Search for Activity"
+                placeholder="Searching..."
                 onChange={(e) => {
                     setKeywords(e.target.value)
                 }}
