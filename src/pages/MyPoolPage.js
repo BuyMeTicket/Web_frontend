@@ -11,7 +11,6 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
-  CProgress,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -118,7 +117,7 @@ const MyPool = () => {
         </CCardHeader>
         <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
           <AddCircle url={'/pool/Add'} />
-          {pools.length === 0 ? <h1 className='text-center'>Pools not found</h1> : pools.map((pool, index) => {
+          {pools.length !== 0 && pools.map((pool, index) => {
             const during = new Date() > new Date(pool.startTime) && new Date() < new Date(pool.endTime)
             const finish = new Date() > new Date(pool.endTime)
             return (
@@ -188,6 +187,7 @@ const MyPool = () => {
             )
           })}
         </div>
+        {pools.length === 0 && <h1 className='text-center my-3'>Pools not found</h1>}
       </div>
       <CButton className="more-activities">LOAD MORE</CButton>
     </div>

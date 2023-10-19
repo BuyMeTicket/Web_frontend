@@ -20,7 +20,6 @@ import AddCircle from '../components/AddCircle'
 const MyActivity = () => {
   const address = useAddress()
   const navigate = useNavigate();
-  // const [keywords, setKeywords] = useState('')
   const [activities, setActivities] = useState(null)
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState('No result');
@@ -69,13 +68,6 @@ const MyActivity = () => {
         // Handle other errors as needed
       });
   }
-  // const searchActivities = async (keywords) => { }
-  // const handleEnter = async (e) => {
-  //   if (e.key === 'Enter') {
-  //     const filteredActivities = await searchActivities(keywords)
-  //     setActivities(filteredActivities)
-  //   }
-  // }
   
   const withdrawing = async () => {
     await Actvity_contract.call("withdraw")
@@ -150,7 +142,7 @@ const MyActivity = () => {
         </CCardHeader>
         <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
           <AddCircle url={'/activity/Add'} />
-          {activities.length === 0 ? <h1 className='text-center'>Activities not found</h1> : activities.map(activity => {
+          {activities.length !== 0 && activities.map(activity => {
             const startSelling = new Date(activity.startSellTime) <= new Date()
             const endSelling = new Date(activity.endSellTime)<new Date()
             return (
@@ -216,6 +208,7 @@ const MyActivity = () => {
             )
           })}
         </div>
+        {activities.length === 0 && <h1 className='text-center my-3'>Events not found</h1>}
       </div>
       <CButton className="more-activities">LOAD MORE</CButton>
     </div>

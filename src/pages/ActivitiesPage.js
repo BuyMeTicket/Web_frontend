@@ -13,15 +13,13 @@ import {
   CImage,
   CRow,
   CButton,
-  CInputGroup,
-  CFormInput,
   CCol,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
 import Spinner from '../components/Spinner';
 import AddCircle from '../components/AddCircle';
-
+import Searchbar from '../components/Searchbar';
 const Activities = () => {
   const address = useAddress()
   const [loading, setLoading] = useState(true)
@@ -29,44 +27,26 @@ const Activities = () => {
   const {
     data: isEventHolder,
   } = useContractRead(GlobalContract, "isEventHolders", [address])
-  const [keywords, setKeywords] = useState('')
   const [activities, setActivities] = useState(null)
-  let popularActivities = activities ? activities.slice() : null
-  popularActivities = activities ? popularActivities.sort((a, b) => b.watches - a.watches).slice(0, 3) : null
-
+  const [popularActivities, setPopularActivities] = useState(null)
   const getActivities = async () => {
     instance.get('/activity/all').then((res) => {
       setActivities(res.data)
+      if(res.data.length <3) setPopularActivities(res.data)
+      else setPopularActivities(res.data.slice(0, 3))
       setLoading(false)
     })
   }
 
-  const searchActivities = async (keywords) => { }
-  const handleEnter = async (e) => {
-    if (e.key === 'Enter') {
-      const filteredActivities = await searchActivities(keywords)
-      setActivities(filteredActivities)
-    }
-  }
+
   useEffect(() => {
     getActivities()
   }, [])
   return (
     loading ? <Spinner /> :
       <div className="container d-flex flex-column justify-content-center align-items-center">
-        <CInputGroup className='d-flex justify-content-center'>
-          <CFormInput
-            style={{ borderRadius: '2.5rem', backgroundColor: 'gray', border: 'none', maxWidth: '20rem', marginBottom: '-1rem' }}
-            type="search"
-            placeholder="Search for Activity"
-            onChange={(e) => {
-              setKeywords(e.target.value)
-            }}
-            onKeyPress={handleEnter}
-          />
-          <CIcon icon='cil-zoom' className='text-white mt-1' style={{ marginLeft: '-2.5rem', zIndex: 1 }} height='30' />
-        </CInputGroup>
-        <CRow className="d-block justify-content-center my-4">
+        <Searchbar setFunc={setActivities} />
+        {popularActivities.length!==0&&<CRow className="d-block justify-content-center my-4">
           <CCard className="bg-transparent border-0">
             <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
               <h1><b><u>Popular Events</u></b></h1>
@@ -94,14 +74,14 @@ const Activities = () => {
               </CCarousel>
             </CCardBody>
           </CCard>
-        </CRow>
+        </CRow>}
         <div>
           <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
             <h1 className='my-4'><b><u>All Events</u></b></h1>
           </CCardHeader>
           <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
             {isEventHolder && <AddCircle url='/activity/Add' />}
-            {activities.length === 0 ? <h1 className='text-center'>Activities not found</h1> : activities.map(activity => {
+            {activities.length !== 0 && activities.map(activity => {
               return (
                 <div className='item-card' key={activity._id}>
                   <div className="card shadow-sm h-100">
@@ -152,6 +132,7 @@ const Activities = () => {
               )
             })}
           </div>
+          {activities.length === 0 && <h1 className='text-center my-3'>Events not found</h1>}
         </div>
         <CButton className="more-activities">LOAD MORE</CButton>
       </div>

@@ -13,14 +13,13 @@ import {
   CImage,
   CRow,
   CButton,
-  CInputGroup,
-  CFormInput,
   CCol,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
 import Spinner from '../components/Spinner';
 import AddCircle from '../components/AddCircle';
+import Searchbar from '../components/Searchbar';
 
 const Pools = () => {
   const address = useAddress()
@@ -29,42 +28,24 @@ const Pools = () => {
     data: isEventHolder,
   } = useContractRead(GlobalContract, "isEventHolders", [address])
   const [loading, setLoading] = useState(true)
-  const [keywords, setKeywords] = useState('')
   const [pools, setPools] = useState(null)
-  let popularPools = pools && pools.slice()
-  popularPools = popularPools && popularPools.sort((a, b) => b.watches - a.watches).slice(0, 3)
-
+  const [popularPools, setPopularPools] = useState(null)
   const getPools = async () => {
     instance.get('/pool/all').then((res) => {
       setPools(res.data)
+      if (res.data.length < 3) setPopularPools(res.data)
+      else setPopularPools(res.data.slice(0, 3))
       setLoading(false)
     })
   }
 
-  const searchPools = async (keywords) => { }
-  const handleEnter = async (e) => {
-    if (e.key === 'Enter') {
-      const filteredPools = await searchPools(keywords)
-      setPools(filteredPools)
-    }
-  }
+
   useEffect(() => {
     getPools()
   }, [])
   return (
     popularPools === null ? <Spinner /> : <div className="container d-flex flex-column justify-content-center align-items-center">
-      <CInputGroup className='d-flex justify-content-center'>
-        <CFormInput
-          style={{ borderRadius: '2.5rem', backgroundColor: 'gray', border: 'none', maxWidth: '20rem', marginBottom: '-1rem' }}
-          type="search"
-          placeholder="Search for Pool"
-          onChange={(e) => {
-            setKeywords(e.target.value)
-          }}
-          onKeyPress={handleEnter}
-        />
-        <CIcon icon='cil-zoom' className='text-white mt-1' style={{ marginLeft: '-2.5rem', zIndex: 1 }} height='30' />
-      </CInputGroup>
+      <Searchbar setFunc={setPools} />
       <CRow className="d-block justify-content-center my-4">
         <CCard className="bg-transparent border-0">
           <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
