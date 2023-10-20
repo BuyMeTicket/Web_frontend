@@ -17,6 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
 import Spinner from '../components/Spinner';
 import AddCircle from '../components/AddCircle'
+import Swal from 'sweetalert2'
 const MyActivity = () => {
   const address = useAddress()
   const navigate = useNavigate();
@@ -63,7 +64,12 @@ const MyActivity = () => {
         console.log(res.data);
         if (res.data === 'Ticket used.') {
           // Redirect to ticketpage
-          navigate('/Ticket/Own');
+          Swal.fire({
+            icon: 'success',
+            title: 'Ticket used.',
+            showConfirmButton: false,
+            timer: 1500
+          })
         }
       })
       .catch(error => {
