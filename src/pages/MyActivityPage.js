@@ -39,7 +39,7 @@ const MyActivity = () => {
       const ciphertext = cipherValue[1];
       const cipherAddress = cipherValue[0]
       //decrypt
-      const decrypted = await instance.post(`/crypto/decrypt`, { ciphertext, cipherAddress })
+      const decrypted = await instance.post(`/crypto/decrypt`, { ciphertext:ciphertext, address:cipherAddress })
       if (decrypted.data === 'Key expired.') {
         alert('Key expired.')
         return
