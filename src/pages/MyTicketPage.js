@@ -50,7 +50,8 @@ function MyTicketPage() {
             })
     }
     const handleSelectedTicket = async (ticket) => {
-        const encryptedData = await encrypt(ticket);
+        const encrypted = await encrypt(ticket);
+        const encryptedData = address + '/' + encrypted;
         setQrCodeValue(encryptedData);
         setSelectedTicket(ticket)
     }
@@ -157,14 +158,14 @@ function MyTicketPage() {
     const RefreshQRCode = async () => {
         try {
             // Logic to refresh the QR code
-            const encryptedData = await encrypt(selectedTicket);
+            const encrypted = await encrypt(selectedTicket);
+            const encryptedData = address + '/' + encrypted;
             setQrCodeValue(encryptedData);
             console.log('QR code refreshed!');
             // Clear any existing timeout
             if (expireTimeout) {
                 clearTimeout(expireTimeout);
             }
-
             // Set a new timeout to call the deleteQRCode function after 5 minutes
             expireTimeout = setTimeout(() => {
                 instance.post('/user/expire', { address })
