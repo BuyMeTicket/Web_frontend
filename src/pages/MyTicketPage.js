@@ -20,6 +20,7 @@ import { instance } from '../api';
 import { API_KEY } from '../const/backend';
 import Spinner from '../components/Spinner';
 import CountdownTimer from '../components/countdownTimer';
+import { darkTheme } from "@thirdweb-dev/react";
 let expireTimeout = null;
 function MyTicketPage() {
     const [isModal, setIsModal] = useState(false)
@@ -77,7 +78,7 @@ function MyTicketPage() {
             if (user.success === true) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Congratuation!! Get Whitelist!',
+                    title: 'Show QR code success!!',
                     showConfirmButton: false,
                     timer: 1500
                 })
@@ -102,7 +103,7 @@ function MyTicketPage() {
         // Set a new timeout to call the deleteQRCode function after 5 minutes
         expireTimeout = setTimeout(() => {
             instance.post('/user/expire', { address })
-        }, 30000);  // 30 second in milliseconds
+        }, 10000);  // 30 second in milliseconds
     }
     const addMetaMask = async (ticket) => {
         try {
@@ -167,7 +168,7 @@ function MyTicketPage() {
             // Set a new timeout to call the deleteQRCode function after 5 minutes
             expireTimeout = setTimeout(() => {
                 instance.post('/user/expire', { address })
-            }, 30000);  // 30 second in milliseconds
+            }, 10000);  // 30 second in milliseconds
         } catch (error) {
             console.error("Error refreshing QR code:", error);
         }
@@ -236,13 +237,13 @@ function MyTicketPage() {
                                                 </p>
                                             </CCol>
                                             <CCol xs={5} className='d-flex flex-column justify-content-center align-items-center'>
-                                                {(!ticket.status === 'available' && canRefund) ? (
+                                                {(ticket.status === 'available' && canRefund) ? (
                                                     <Web3Button
                                                         contractAddress={TICKET_FACTORY_ADDRESS}
                                                         action={async () => {
                                                             console.log(ticket.name)
                                                             console.log(ticket.activity.eventId)
-                                                            await Ticket_Factory_Contract.call("refundEventTicket", [ticket.activity.eventId, ticket.name, 1]);
+                                                            await Ticket_Factory_Contract.call("refundEventTicket", [ticket.activity.eventId, ticket.name, ticket.quantity]);
                                                             deleteTicket(ticket._id)
                                                             setIsModal(false)
                                                         }}

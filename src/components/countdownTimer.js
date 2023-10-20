@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import CIcon from '@coreui/icons-react';
 import { cilReload } from '@coreui/icons';
 function CountdownTimer({ RefreshQRCode }) {
-    const [remainingTime, setRemainingTime] = useState(30);  // 5 minutes in seconds
+    const [remainingTime, setRemainingTime] = useState(10);  // 5 minutes in seconds
 
     useEffect(() => {
         if (remainingTime <= 0) {
             RefreshQRCode();
-            setRemainingTime(30);
+            setRemainingTime(10);
         }
         const intervalId = setInterval(() => {
             setRemainingTime(time => time - 1);
