@@ -21,7 +21,7 @@ function CountdownTimer({ RefreshQRCode }) {
     const handleRefresh = () => {
         RefreshQRCode();
         // Logic to refresh or restart the countdown or any other desired action
-        setRemainingTime(30);  // Resetting to 30 seconds for demonstration
+        setRemainingTime(10);  // Resetting to 30 seconds for demonstration
     };
     return (
         <div>
