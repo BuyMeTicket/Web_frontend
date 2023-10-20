@@ -35,11 +35,13 @@ const MyActivity = () => {
   }
   const handleScan = async (result, error) => {
     if (result) {
-      let cipherValue = result.text.split('/',2);
-      const ciphertext = cipherValue[1];
-      const cipherAddress = cipherValue[0]
+      let cipherValue = result.text.split('/',1);
+      const cipherAddress = cipherValue[0]?.toString()
+      const ciphertext = result.text.replace(cipherAddress + '/', '')?.toString()
+      console.log(cipherAddress)
+      console.log(ciphertext)
       //decrypt
-      const decrypted = await instance.post(`/crypto/decrypt`, { ciphertext:ciphertext, address:cipherAddress })
+      const decrypted = await instance.post(`/crypto/decrypt`, { ciphertext, address:cipherAddress })
       if (decrypted.data === 'Key expired.') {
         alert('Key expired.')
         return
