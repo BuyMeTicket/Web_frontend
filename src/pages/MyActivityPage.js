@@ -103,6 +103,7 @@ const MyActivity = () => {
           <CModalBody>
             <QrReader
               onResult={handleScan}
+              constraints={{ facingMode: "environment" }}
               style={{ width: '100%' }}
             />
           </CModalBody>
