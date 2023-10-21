@@ -27,7 +27,10 @@ const AddPool = () => {
     const { contract: pool_factory_address } = useContract(FUNDING_POOL_FACTORY_ADDRESS);
     const [showPreview, setShowPreview] = useState(false);
     const togglePreview = () => {
-        setShowPreview(prev => !prev);
+        setShowPreview(true);
+    };
+    const closePreview = () => {
+        setShowPreview(false);
     };
     const handleInput = (e) => {
         const { name, value } = e.target;
@@ -142,7 +145,7 @@ const AddPool = () => {
 
                 </div>
 
-                <CModal size="lg" visible={showPreview} onClose={togglePreview} alignment="center" className='text-black'>
+                <CModal size="lg" visible={showPreview} onClose={closePreview} alignment="center" className='text-black'>
                     <CModalHeader closeButton={false}>
                         <h4>Pool Preview</h4>
                     </CModalHeader>
@@ -186,7 +189,7 @@ const AddPool = () => {
                         </div>
                     </CModalBody>
                     <CModalFooter>
-                        <CButton color="secondary" onClick={togglePreview}>
+                        <CButton color="secondary" onClick={closePreview}>
                             Close Preview
                         </CButton>
                     </CModalFooter>

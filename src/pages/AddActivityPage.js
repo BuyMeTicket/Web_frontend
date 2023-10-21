@@ -54,7 +54,11 @@ const AddActivity = () => {
   const [showPreview, setShowPreview] = useState(false);
   const [ticket, setTicket] = useState(null)
   const togglePreview = () => {
-    setShowPreview(prev => !prev);
+    setShowPreview(true);
+    setIsModal(false)
+  };
+  const closePreview = () => {
+    setShowPreview(false);
     setIsModal(false)
   };
   const handleInput = (e) => {
@@ -264,7 +268,7 @@ const AddActivity = () => {
           </div>
 
 
-          <CModal size="lg" visible={showPreview} onClose={togglePreview} alignment="center" className='text-black'>
+          <CModal size="lg" visible={showPreview} onClose={closePreview} alignment="center" className='text-black'>
             <CModalHeader closeButton={false}>
               <h4>Activity Preview</h4>
             </CModalHeader>
@@ -338,7 +342,7 @@ const AddActivity = () => {
               </div>
             </CModalBody>
             <CModalFooter>
-              <CButton color="secondary" onClick={togglePreview}>
+              <CButton color="secondary" onClick={closePreview}>
                 Close Preview
               </CButton>
             </CModalFooter>
