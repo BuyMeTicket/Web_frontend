@@ -40,8 +40,6 @@ const MyActivity = () => {
       let cipherValue = result.text.split('/',1);
       const cipherAddress = cipherValue[0]?.toString()
       const ciphertext = result.text.replace(cipherAddress + '/', '')?.toString()
-      console.log(cipherAddress)
-      console.log(ciphertext)
       //decrypt
       const decrypted = await instance.post(`/crypto/decrypt`, { ciphertext, address:cipherAddress })
       if (decrypted.data === 'Key expired.') {
@@ -122,7 +120,7 @@ const MyActivity = () => {
               color="success"
               onClick={ticketPass}
             >
-              address : {data && data.split('/')[1]}<br />
+              address : {data && data.split('/')[1].substring(0,7)+'...'+data.split('/')[1].substring(data.split('/')[1].length-4)}<br />
               ticket name : {data && data.split('/')[2]}<br />
               ticket quantity : {data && data.split('/')[3]}
             </CButton>
