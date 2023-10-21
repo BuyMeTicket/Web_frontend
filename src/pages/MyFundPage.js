@@ -10,6 +10,7 @@ import {
     CModalTitle,
     CModalBody,
     CModalFooter,
+    CTooltip,
 } from '@coreui/react'
 import {Link} from 'react-router-dom'
 import Spinner from '../components/Spinner'
@@ -140,14 +141,16 @@ const MyFund = () => {
                                     <div className="card-body d-flex flex-column justify-content-between">
                                         <div className="d-flex justify-content-between">
                                             <CCol xs={7} className='p-0' >
-                                                <h4>
-                                                    {/* {pool.title.length > 12 ? pool.title.substring(0, 12) + ' ...' : pool.title} */}
-                                                    {pool.title}
-                                                    <>{' '}</>
-                                                    <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer">
+                                                <div className='d-flex align-items-center'>
+                                                    <CTooltip content={pool.title}>
+                                                        <h4>
+                                                            {pool.title}
+                                                        </h4>
+                                                    </CTooltip>
+                                                    <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer" className='ml-2'>
                                                         <CIcon icon={cilLink} size='lg' />
                                                     </a>
-                                                </h4>
+                                                </div>
                                                 <p style={{
                                                     fontFamily: 'Arial, sans-serif',
                                                     fontSize: '16px',

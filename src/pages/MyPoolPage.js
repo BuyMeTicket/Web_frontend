@@ -11,6 +11,7 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
+  CTooltip,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -115,7 +116,7 @@ const MyPool = () => {
         <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
           <h1 className='my-4'><b><u>My Pools</u></b></h1>
         </CCardHeader>
-        <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
+        <div className="d-flex flex-wrap" style={{ gap: '1.3rem' }}>
           <AddCircle url={'/pool/Add'} />
           {pools.length !== 0 && pools.map((pool, index) => {
             const during = new Date() > new Date(pool.startTime) && new Date() < new Date(pool.endTime)
@@ -127,13 +128,16 @@ const MyPool = () => {
                   <div className="card-body d-flex flex-column justify-content-between">
                     <div className="d-flex justify-content-between">
                       <CCol xs={7} className='p-0' >
-                        <h4>
-                          {pool.title}
-                          <>{' '}</>
-                          <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer">
-                            <CIcon icon={cilLink} size='lg' />
-                          </a>
-                        </h4>
+                        <div className='d-flex align-items-center'>
+                          <CTooltip content={pool.title}>
+                            <h4>
+                              {pool.title}
+                            </h4>
+                          </CTooltip>
+                            <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer" className='ml-2'>
+                              <CIcon icon={cilLink} size='lg' />
+                            </a>
+                        </div>
                         <p style={{
                           fontFamily: 'Arial, sans-serif',
                           fontSize: '16px',

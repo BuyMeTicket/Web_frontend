@@ -10,6 +10,7 @@ import {
   CModalTitle,
   CModalBody,
   CModalFooter,
+  CTooltip,
 } from '@coreui/react'
 import { useNavigate } from 'react-router-dom'
 import { QrReader } from 'react-qr-reader';
@@ -150,7 +151,7 @@ const MyActivity = () => {
         <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
           <h1 className='my-4'><b><u>My Events</u></b></h1>
         </CCardHeader>
-        <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
+        <div className="d-flex flex-wrap" style={{ gap: '1.3rem' }}>
           <AddCircle url={'/activity/Add'} />
           {activities.length !== 0 && activities.map(activity => {
             const startSelling = new Date(activity.startSellTime) <= new Date()
@@ -162,13 +163,19 @@ const MyActivity = () => {
                   <div className="card-body d-flex flex-column justify-content-between">
                     <div className="d-flex justify-content-between">
                       <CCol xs={7} className='p-0' >
-                        <h3>
-                          {activity.title}
-                          <>{' '}</>
-                          <a href={`https://goerli.etherscan.io/address/${activity.eventAddress}`} target='_blank' rel="noopener noreferrer">
+                        <div className='d-flex align-items-center'>
+                          <CTooltip content={activity.title}>
+                          <h4>
+                            {activity.title}
+                          </h4>
+                          </CTooltip>
+                          <a href={`https://goerli.etherscan.io/address/${activity.eventAddress}`} target='_blank' rel="noopener noreferrer" className='ml-2'>
                             <CIcon icon={cilLink} size='lg' />
                           </a>
-                        </h3>
+                          <CTooltip content={activity.address}>
+                            <CIcon icon='cil-location-pin' style={{minHeight:'1.1rem', minWidth:'1.1rem'}} size='lg' className='ml-2 mb-1' />
+                          </CTooltip>
+                        </div>
                       </CCol>
                       <CCol xs={4} className='p-0'>
                         <p className=' d-flex flex-column align-items-end justify-content-end'>
