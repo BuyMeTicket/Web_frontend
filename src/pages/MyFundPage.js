@@ -168,7 +168,6 @@ const MyFund = () => {
                                             </CCol>
                                             <CCol xs={3} className='p-0'>
                                                 <p className=' d-flex flex-column align-items-end justify-content-end'>
-                                                    {during && <span>已累積/目標:<br />{pool.currentPrice}/{pool.targetPrice}</span>}
                                                     <span>捐贈金額<br />{getDonationAmountByAddress(pool, address)}USDT</span>
                                                 </p>
                                             </CCol>

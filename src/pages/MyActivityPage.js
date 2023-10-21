@@ -12,7 +12,7 @@ import {
   CModalFooter,
   CTooltip,
 } from '@coreui/react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate,Link } from 'react-router-dom'
 import { QrReader } from 'react-qr-reader';
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
@@ -78,7 +78,8 @@ const MyActivity = () => {
   }
   
   const withdrawing = async () => {
-    await Actvity_contract.call("withdraw")
+    console.log('Activity_contract',contractAddress)
+    await Activity_contract.call("withdraw")
   }
   const getMyActivities = async () => {
     instance.get('/activity/own', { params: { holder: address } })
@@ -94,11 +95,11 @@ const MyActivity = () => {
 
   useEffect(() => {
     // Check if pool has a value and pool.address is defined
-    if (selectedActivity && selectedActivity.address) {
-      setContractAddress(selectedActivity.address);
+    if (selectedActivity && selectedActivity.eventAddress) {
+      setContractAddress(selectedActivity.eventAddress);
     }
   }, [selectedActivity]);
-  const { contract: Actvity_contract } = useContract(contractAddress);
+  const { contract: Activity_contract } = useContract(contractAddress);
   return (
     loading ? <Spinner /> : <div className="container d-flex flex-column justify-content-center align-items-center">
       {selectedActivity && (
@@ -120,7 +121,7 @@ const MyActivity = () => {
               color="success"
               onClick={ticketPass}
             >
-              address : {data && data.split('/')[1].substring(0,7)+'...'+data.split('/')[1].substring(data.split('/')[1].length-4)}<br />
+              {data && data.split('/')[1]===address ? 'Pass' : 'Fail'}<br />
               ticket name : {data && data.split('/')[2]}<br />
               ticket quantity : {data && data.split('/')[3]}
             </CButton>
@@ -135,12 +136,14 @@ const MyActivity = () => {
             </CModalTitle>
           </CModalHeader>
           <CModalBody>
+            <p>您即將提款！！！</p>
           </CModalBody>
           <CModalFooter>
             <CButton
               color="success"
               onClick={withdrawing}
             >
+              提款
             </CButton>
           </CModalFooter>
         </CModal>
@@ -201,16 +204,19 @@ const MyActivity = () => {
                         {endSelling&&(
                         <CButton 
                           className="btn btn-warning mb-1 p-1"
-                          onClick={withdrawing}
+                          onClick={() => {
+                            setSelectedActivity(activity)
+                            setIsModal2(true)
+                          }}
                         >
                           提款
                         </CButton>)}
-                        {!endSelling ? (<a
-                          href={`/activity/${activity._id}`}
+                        {!endSelling ? (<Link
+                          to={`/activity/${activity._id}`}
                           className={`btn btn-${startSelling ? 'success' : 'primary'} p-1`}
                         >
                           {startSelling ? '開賣中' : '檢視活動'}
-                        </a>
+                        </Link>
                         ) : (
                           <button key={activity._id} className={`btn btn-${'success'}`} onClick={() => {
                             setSelectedActivity(activity)

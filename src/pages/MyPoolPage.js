@@ -180,7 +180,7 @@ const MyPool = () => {
                           to={`/Pool/${pool._id}`}
                           className={`btn btn-${during ? 'success' : 'primary'} p-1`}
                         >
-                          {during ? '募資中' : '檢視募資活動'}
+                          {during ? '募資中' : '檢視活動'}
                         </Link>
                         }
                       </div>
