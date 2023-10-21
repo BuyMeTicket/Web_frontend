@@ -13,6 +13,7 @@ import {
   CImage,
   CRow,
   CButton,
+  CTooltip,
   CCol,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
@@ -79,7 +80,7 @@ const Pools = () => {
         <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
           <h1 className='my-4'><b><u>All Pools</u></b></h1>
         </CCardHeader>
-        <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
+        <div className="d-flex flex-wrap" style={{ gap: '1.3rem' }}>
           {isEventHolder && <AddCircle url={'/pool/Add'} />}
           {loading ? <h1 className='text-center'>Pools not found</h1> : pools.map((pool, index) => {
             return (
@@ -89,13 +90,16 @@ const Pools = () => {
                   <div className="card-body d-flex flex-column justify-content-between">
                     <div className="d-flex justify-content-between">
                       <CCol xs={7} className='p-0' >
-                        <h3>
-                          {pool.title}
-                          <>{' '}</>
-                          <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer">
+                        <div className="d-flex align-items-center">
+                          <CTooltip content={pool.title}>
+                            <h4>
+                              {pool.title}
+                            </h4>
+                          </CTooltip>
+                          <a href={`https://goerli.etherscan.io/address/${pool.address}`} target='_blank' rel="noopener noreferrer" className='ml-2 mb-1'>
                             <CIcon icon={cilLink} size='lg' />
                           </a>
-                        </h3>
+                        </div>
                       </CCol>
                       <CCol xs={4} className='p-0'>
                         <p className=' d-flex flex-column align-items-end justify-content-end'>
@@ -108,7 +112,7 @@ const Pools = () => {
                     </div>
                     <div className="d-flex justify-content-between align-items-center">
                       <p className="text-body-secondary m-0">
-                        {pool.startTime.split('T')[0]} <br />~ {pool.endTime.split('T')[0]}
+                        {pool.startTime.split('T')[0]} ~ {pool.endTime.split('T')[0]}
                       </p>
                       <Link
                         to={`/pool/${pool._id}`}

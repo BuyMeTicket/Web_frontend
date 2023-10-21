@@ -13,6 +13,7 @@ import {
   CImage,
   CRow,
   CButton,
+  CTooltip,
   CCol,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
@@ -52,15 +53,14 @@ const Activities = () => {
               <h1><b><u>Popular Events</u></b></h1>
             </CCardHeader>
             <CCardBody style={{ maxWidth: '50rem' }}>
-              <CCarousel controls indicators transition="crossfade">
+              <CCarousel controls indicators transition="crossfade" className='h-100'>
                 {activities.length === 0 ? <h1 className='text-center'>Activities not found</h1> : popularActivities.map((popAct, index) => {
                   return (
                     <CCarouselItem key={index}>
                       <Link to={`/activity/${popAct._id}`}>
                         <CImage
-                          className="d-block"
+                          className="d-block image-fluid"
                           fluid
-                          style={{ height: '30rem' }}
                           src={popAct.image}
                           alt={popAct.id}
                         />
@@ -79,7 +79,7 @@ const Activities = () => {
           <CCardHeader className="mb-1 border-0 text-center bg-transparent text-white">
             <h1 className='my-4'><b><u>All Events</u></b></h1>
           </CCardHeader>
-          <div className="d-flex flex-wrap justify-content-center" style={{ gap: '1.3rem' }}>
+          <div className="d-flex flex-wrap" style={{ gap: '1.3rem' }}>
             {isEventHolder && <AddCircle url='/activity/Add' />}
             {activities.length !== 0 && activities.map(activity => {
               return (
@@ -89,13 +89,23 @@ const Activities = () => {
                     <div className="card-body d-flex flex-column justify-content-between">
                       <div className="d-flex justify-content-between">
                         <CCol xs={7} className='p-0' >
-                          <h3>
-                            {activity.title}
-                            <>{' '}</>
-                            <a href={`https://goerli.etherscan.io/address/${activity.eventAddress}`} target='_blank' rel="noopener noreferrer">
+                          <div className='d-flex align-items-center'>
+                            <CTooltip content={activity.title}>
+                              <h4>
+                                {activity.title}
+                                <>{' '}</>
+                              </h4>
+                            </CTooltip>
+                            <a href={`https://goerli.etherscan.io/address/${activity.eventAddress}`} target='_blank' rel="noopener noreferrer" className='ml-2'>
                               <CIcon icon={cilLink} size='lg' />
                             </a>
-                          </h3>
+                            <CTooltip content={activity.address}>
+                              <CIcon icon='cil-location-pin' style={{minHeight:'1.1rem', minWidth:'1.1rem'}} size='lg' className='ml-2 mb-1' />
+                            </CTooltip>
+                          </div>
+                          <p className="text-body-secondary m-0">
+                            Date:{activity.date.split('T')[0]}
+                          </p>
                         </CCol>
                         <CCol xs={4} className='p-0'>
                           <p className=' d-flex flex-column align-items-end justify-content-end'>
@@ -113,7 +123,8 @@ const Activities = () => {
                       <div className="d-flex justify-content-between align-items-end">
                         <div>
                           <p className="text-body-secondary m-0">
-                            {activity.startSellTime.split('T')[0]}<br/> ~ {activity.endSellTime.split('T')[0]}
+                            Selling Date: <br/>
+                            {activity.startSellTime.split('T')[0]} ~ {activity.endSellTime.split('T')[0]}
                           </p>
                           <p className="text-body-secondary m-0">
                             Registered: {activity.soldTickets} people
