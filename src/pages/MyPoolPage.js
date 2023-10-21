@@ -93,8 +93,8 @@ const MyPool = () => {
   return (
     loading ? <Spinner /> : <div className="container d-flex flex-column justify-content-center align-items-center">
       {selectedPool && (
-        <CModal size="l" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
-          <CModalHeader onDismiss={closeModal}>
+        <CModal size="l" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
+          <CModalHeader onClose={closeModal}>
             <CModalTitle>募資活動提款</CModalTitle>
           </CModalHeader>
           <CModalBody>

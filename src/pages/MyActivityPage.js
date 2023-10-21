@@ -103,7 +103,7 @@ const MyActivity = () => {
   return (
     loading ? <Spinner /> : <div className="container d-flex flex-column justify-content-center align-items-center">
       {selectedActivity && (
-        <CModal size="l" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
+        <CModal size="l" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
           <CModalHeader onClose={closeModal}>
             <CModalTitle>
               {selectedActivity.title}
@@ -129,7 +129,7 @@ const MyActivity = () => {
         </CModal>
       )}
       {selectedActivity && (
-        <CModal size="l" visible={isModal2} onDismiss={closeModal} alignment="center" className='text-black'>
+        <CModal size="l" visible={isModal2} onClose={closeModal} alignment="center" className='text-black'>
           <CModalHeader onClose={closeModal}>
             <CModalTitle>
               {selectedActivity.title}

@@ -108,8 +108,8 @@ const MyFund = () => {
     return (
         loading ? <Spinner /> : <div className="container">
             {selectedPool && (
-                <CModal size="l" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
-                    <CModalHeader onDismiss={closeModal} closeButton={false}>
+                <CModal size="l" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
+                    <CModalHeader onClose={closeModal} closeButton={false}>
                         <CModalTitle>Redeem</CModalTitle>
                     </CModalHeader>
                     <CModalBody className='d-flex justify-content-center'>

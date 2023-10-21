@@ -264,12 +264,12 @@ const AddActivity = () => {
           </div>
 
 
-          <CModal size="lg" visible={showPreview} onDismiss={togglePreview} alignment="center" className='text-black'>
+          <CModal size="lg" visible={showPreview} onClose={togglePreview} alignment="center" className='text-black'>
             <CModalHeader closeButton={false}>
               <h4>Activity Preview</h4>
             </CModalHeader>
             <CModalBody>
-              {ticket && <CModal size="md" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
+              {ticket && <CModal size="md" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
                 <CModalBody>
                   <div className="mb-3">
                     <h5>您欲購買的是： {ticket && ticket.name} {ticket && `NT$${ticket.price}`}</h5>

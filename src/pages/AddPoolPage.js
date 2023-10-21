@@ -142,7 +142,7 @@ const AddPool = () => {
 
                 </div>
 
-                <CModal size="lg" visible={showPreview} onDismiss={togglePreview} alignment="center" className='text-black'>
+                <CModal size="lg" visible={showPreview} onClose={togglePreview} alignment="center" className='text-black'>
                     <CModalHeader closeButton={false}>
                         <h4>Pool Preview</h4>
                     </CModalHeader>

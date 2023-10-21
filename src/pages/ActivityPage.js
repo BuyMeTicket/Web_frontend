@@ -72,7 +72,7 @@ const ActivityPage = () => {
   }, [])
   return (
     <>
-      {ticket && <CModal size="md" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
+      {ticket && <CModal size="md" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
         <CModalBody>
           <CForm>
             <div className="mb-3">

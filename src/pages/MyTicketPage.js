@@ -21,7 +21,6 @@ import { instance } from '../api';
 import { API_KEY } from '../const/backend';
 import Spinner from '../components/Spinner';
 import CountdownTimer from '../components/countdownTimer';
-import { darkTheme } from "@thirdweb-dev/react";
 let expireTimeout = null;
 function MyTicketPage() {
     const [isModal, setIsModal] = useState(false)
@@ -34,7 +33,8 @@ function MyTicketPage() {
     const [qrCodeValue, setQrCodeValue] = useState(selectedTicket ? selectedTicket.encryptedValue : '');
     const address = useAddress();
     const deleteTicket = async (ticket) => {
-        instance.delete('/ticket/delete', { params: { _id: ticket._id } })
+        console.log(ticket)
+        instance.delete('/ticket/delete', {params:{ _id: ticket}})
     }
     const closeModal = () => {
         setIsModal(false)
@@ -178,8 +178,8 @@ function MyTicketPage() {
     return (
         loading ? <Spinner /> : <div className="container">
             {selectedTicket && (
-                <CModal size="l" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
-                    <CModalHeader onDismiss={closeModal} closeButton={false}>
+                <CModal size="l" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
+                    <CModalHeader onClose={closeModal} closeButton={false}>
                         <CModalTitle>{selectedTicket.name}</CModalTitle>
                     </CModalHeader>
                     <CModalBody className='d-flex justify-content-center'>
@@ -252,6 +252,7 @@ function MyTicketPage() {
                                                         contractAddress={TICKET_FACTORY_ADDRESS}
                                                         action={async () => {
                                                             await Ticket_Factory_Contract.call("refundEventTicket", [ticket.activity.eventId, ticket.name, ticket.quantity]);
+                                                            if (ticket._id === null) return;
                                                             deleteTicket(ticket._id)
                                                             setIsModal(false)
                                                         }}

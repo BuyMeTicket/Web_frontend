@@ -148,7 +148,7 @@ const PoolPage = () => {
   }, [])
   return (
     <>
-      <CModal size="md" visible={isModal} onDismiss={closeModal} alignment="center" className='text-black'>
+      <CModal size="md" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
         <CModalHeader>
           <strong>Transaction</strong>
         </CModalHeader>
