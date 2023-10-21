@@ -120,8 +120,11 @@ const Activities = () => {
                       <div className="d-flex justify-content-between align-items-end">
                         <div>
                           <p className="text-body-secondary m-0">
-                            {activity.startSellTime.split('T')[0]}<br/> ~ {activity.endSellTime.split('T')[0]}
+                            {activity.date.split('T')[0]}
                           </p>
+                          {/* <p className="text-body-secondary m-0">
+                            {activity.startSellTime.split('T')[0]} ~ {activity.endSellTime.split('T')[0]}
+                          </p> */}
                           <p className="text-body-secondary m-0">
                             Registered: {activity.soldTickets} people
                           </p>

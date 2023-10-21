@@ -10,8 +10,8 @@ import {
     CModalFooter,
     CButton,
     CFormSelect,
-    CTooltip,
     CCol,
+    CTooltip,
 } from '@coreui/react'
 import Swal from 'sweetalert2';
 import { QRCodeCanvas } from "qrcode.react";
@@ -220,21 +220,25 @@ function MyTicketPage() {
                         return (
                             <div className='item-card' key={ticket._id}>
                                 <div className="card shadow-sm h-100">
-                                    <img src={ticket && ticket.nft} alt={ticket} className="card-img" height="250" />
+                                    <img src={ticket && ticket.nft} alt='票券nft' className="card-img" height="250" />
                                     <div className="card-body d-flex flex-column justify-content-between">
-                                        <div className="d-flex align-items-center">
-                                            <h4 className='m-0'>
-                                                <CTooltip content={ticket.activity.title}>
-                                                    <b>{ticket.activity.title} </b>
+                                        <div className='row'>
+                                            <div className="d-flex align-items-center">
+                                                <CTooltip content={ticket.activity.title} placement="bottom">
+                                                    <h4 className='m-0'>
+                                                        <b>{ticket.activity.title} </b>
+                                                    </h4>
                                                 </CTooltip>
-                                            </h4>
-                                            <button onClick={() => addMetaMask(ticket)}>
-                                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask Icon" width="25" height="25" />
-                                            </button><br />
+                                                <CTooltip content="Add transaction info to MetaMask" placement="right">
+                                                    <CButton className='btn-warning' onClick={() => addMetaMask(ticket)}>
+                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask Icon" width="25" height="25" />
+                                                    </CButton>
+                                                </CTooltip>
+                                            </div>
                                             <small className="text-body-secondary m-0" >{ticket.name} x {ticket.quantity}</small>
                                         </div>
                                         <div className="d-flex justify-content-between">
-                                            <CCol xs={7} className='d-flex flex-column justify-content-center align-items-center'>
+                                            <CCol xs={7} className='d-flex flex-column justify-content-center pl-0'>
                                                 {canRefund && <p className="text-body-secondary m-0">
                                                     Refund Rate : {rate}%
                                                 </p>}
@@ -247,8 +251,6 @@ function MyTicketPage() {
                                                     <Web3Button
                                                         contractAddress={TICKET_FACTORY_ADDRESS}
                                                         action={async () => {
-                                                            console.log(ticket.name)
-                                                            console.log(ticket.activity.eventId)
                                                             await Ticket_Factory_Contract.call("refundEventTicket", [ticket.activity.eventId, ticket.name, ticket.quantity]);
                                                             deleteTicket(ticket._id)
                                                             setIsModal(false)

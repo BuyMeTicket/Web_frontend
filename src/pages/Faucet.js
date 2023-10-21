@@ -2,6 +2,8 @@
 import React from 'react';
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { USDT_ADDRESS } from '../const/contractAddress';
+import { CButton, CTooltip } from '@coreui/react';
+
 function FaucetPage() {
     const address = useAddress();
     const { contract: usdt_contract } = useContract(USDT_ADDRESS);
@@ -48,9 +50,11 @@ function FaucetPage() {
                     Get Token
                 </button>
                 <>{'   '}</>
-                <button onClick={() => addMetaMask(USDT_ADDRESS)}>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask Icon" width="30" height="30" />
-                </button>
+                <CTooltip content="Add transaction info to MetaMask" placement="bottom">
+                    <CButton className='btn-warning' onClick={() => addMetaMask(USDT_ADDRESS)}>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask Icon" width="30" height="30" />
+                    </CButton>
+                </CTooltip>
             </div>
         </div>
     );
