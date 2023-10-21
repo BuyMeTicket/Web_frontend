@@ -161,7 +161,7 @@ const MyPool = () => {
                     <div className="d-flex justify-content-between align-items-end">
                       <div>
                         <p className="text-body-secondary m-0">
-                          Date: {pool.startTime.split('T')[0]} <br /> ~ {pool.endTime.split('T')[0]}
+                          Date: {pool.startTime.split('T')[0]} ~ {pool.endTime.split('T')[0]}
                         </p>
                         <p className="text-body-secondary m-0">
                           {pool.donators.length} people donated

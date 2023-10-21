@@ -103,6 +103,9 @@ const Activities = () => {
                               <CIcon icon='cil-location-pin' style={{minHeight:'1.1rem', minWidth:'1.1rem'}} size='lg' className='ml-2 mb-1' />
                             </CTooltip>
                           </div>
+                          <p className="text-body-secondary m-0">
+                            Date:{activity.date.split('T')[0]}
+                          </p>
                         </CCol>
                         <CCol xs={4} className='p-0'>
                           <p className=' d-flex flex-column align-items-end justify-content-end'>
@@ -120,11 +123,9 @@ const Activities = () => {
                       <div className="d-flex justify-content-between align-items-end">
                         <div>
                           <p className="text-body-secondary m-0">
-                            {activity.date.split('T')[0]}
-                          </p>
-                          {/* <p className="text-body-secondary m-0">
+                            Selling Date: <br/>
                             {activity.startSellTime.split('T')[0]} ~ {activity.endSellTime.split('T')[0]}
-                          </p> */}
+                          </p>
                           <p className="text-body-secondary m-0">
                             Registered: {activity.soldTickets} people
                           </p>

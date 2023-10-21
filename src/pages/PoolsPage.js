@@ -112,7 +112,7 @@ const Pools = () => {
                     </div>
                     <div className="d-flex justify-content-between align-items-center">
                       <p className="text-body-secondary m-0">
-                        {pool.startTime.split('T')[0]} <br />~ {pool.endTime.split('T')[0]}
+                        {pool.startTime.split('T')[0]} ~ {pool.endTime.split('T')[0]}
                       </p>
                       <Link
                         to={`/pool/${pool._id}`}
