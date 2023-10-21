@@ -1,6 +1,5 @@
 
 # CRA JavaScript Starter
-
 Starter kit to build with Create React App and thirdweb without additional initial configuration.
 
 
