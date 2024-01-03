@@ -8,11 +8,10 @@ function FaucetPage() {
     const address = useAddress();
     const { contract: usdt_contract } = useContract(USDT_ADDRESS);
     const getUSDT = async () => {
-        await usdt_contract.call("mint", [address, 10000000]);
+        await usdt_contract.call("mint", [address, 10000000000]);
     }
     const addMetaMask = async (address) => {
         try {
-
             // wasAdded is a boolean. Like any RPC method, an error may be thrown.
             const wasAdded = await ethereum.request({
                 method: 'wallet_watchAsset',
@@ -40,7 +39,7 @@ function FaucetPage() {
                 Get Mock USDT Token
             </h1>
             <div>
-                <p>1000 Mock USDT for you per transaction</p>
+                <p>1000000 Mock USDT for you per transaction</p>
                 <button
                     className={`btn btn-${'primary'}`}
                     margin={'8px'}

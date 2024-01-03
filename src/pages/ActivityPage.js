@@ -3,9 +3,11 @@ import { useAddress, useContract, Web3Button } from "@thirdweb-dev/react";
 import Swal from 'sweetalert2';
 import { TICKET_FACTORY_ADDRESS, USDT_ADDRESS } from '../const/contractAddress';
 import { Link, useParams,useNavigate } from 'react-router-dom'
-import { instance } from '../api'
+import { instance,backend_uri } from '../api'
+import * as Passwordless from "@passwordlessdev/passwordless-client";
 import CIcon from '@coreui/icons-react'
 import { cilLink } from '@coreui/icons'
+import { API_KEY, API_URL } from '../const/backend';
 import {
   CModal,
   CModalBody,
@@ -40,22 +42,28 @@ const ActivityPage = () => {
     setIsModal(false)
   }
   const buyTicket = async () => {
-    const eventId = activity.eventId
-    console.log(eventId)
-    const ticketName = ticket.name
-    console.log(ticketName)
-    const Ticket_contract = await Ticket_Factory_Contract.call("eventIdToAddr", [eventId]);
-    if (ticket.price !== 0) {
-      await Token_Contract.call("approve", [Ticket_contract, quantity * ticket.price * 10000]);
-    }
+    try {
+        const eventId = activity.eventId;
+        console.log(eventId);
+        const ticketName = ticket.name;
+        console.log(ticketName);
+        const Ticket_contract = await Ticket_Factory_Contract.call("eventIdToAddr", [eventId]);
 
-    await Ticket_Factory_Contract.call("mintEventTicket", [eventId, ticketName, quantity]);
-    let noNft = ticket
-    delete noNft.uri
-    await instance.post('/ticket/buy', { data: { ...noNft, owner: address, activity: id }, quantity }).then((res) => {
-      setIsModal(false)
-      setQuantity(0)
-    })
+        if (ticket.price !== 0) {
+            await Token_Contract.call("approve", [Ticket_contract, quantity * ticket.price * 10000]);
+        }
+
+        await Ticket_Factory_Contract.call("mintEventTicket", [eventId, ticketName, quantity]);
+        let noNft = ticket;
+        delete noNft.uri;
+        await instance.post('/ticket/buy', { data: { ...noNft, owner: address, activity: id }, quantity });
+        setIsModal(false);
+        setQuantity(0);
+        return true;
+    } catch (error) {
+        console.error("Error buying ticket:", error);
+        return false;
+    }
   }
   const handleQuantityChange = (e) => {
     if (Number(e.target.value) > 6 || Number(e.target.value) > ticket.totalAmount - ticket.soldAmount) {
@@ -66,6 +74,100 @@ const ActivityPage = () => {
     }
     setQuantity(e.target.value)
   }
+  const register = async () => {
+    const alias = activity.title+address;
+    const p = new Passwordless.Client({
+        apiUrl: API_URL,
+        apiKey: API_KEY
+    });
+    // Create token - Call your node backend to retrieve a token that we can use client-side to register a passkey to an alias
+    const backendRequest = await backend_uri.get('/create-token', { params: { alias: alias } })
+    console.log(backendRequest);
+    const backendResponse = backendRequest.data;
+    if (!backendRequest.status===200) {
+        console.log("Our backend failed while creating a token!")
+        return;
+    }
+
+    // Register a key - The Passwordless API and browser creates and stores a passkey, based on the token.
+    try {
+        const { token, err } = await p.register(backendResponse.token, address);
+        if (token) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Successfully registered WebAuthn!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            //add address to backend whitelist
+        } else {
+            console.log("Failed to register WebAuthn!", err)
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to register WebAuthn!',
+            })
+        }
+        // Done - the user can now sign in using the passkey
+    } catch (e) {
+        console.error("Things went bad", e);
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Things went bad',
+        })
+    }
+}
+const verify_buy = async () => {
+    const alias = activity.title+address;
+    const p = new Passwordless.Client({
+        apiKey: API_KEY,
+    });
+    const { token, error } = await p.signinWithAlias(alias);
+    if (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Sign in failed, received the error',
+        })
+    }
+    try {
+        const response = await backend_uri.get("/verify-signin", {
+            params: {
+                token: token
+            }
+        });
+        const user = response.data;
+        if (user.success === true) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Verify Successful Congratuation!!!',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            //add address to backend whitelist
+            const buyAction = await buyTicket();
+            if (buyAction) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Successfully bought ticket!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                closeModal();
+                navigate("/Ticket/Own");
+            }
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong!',
+            timer: 1500
+        })
+    }
+}
+  
   useEffect(() => {
     getActivity()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -94,10 +196,15 @@ const ActivityPage = () => {
           >
             取消
           </CButton>
+          <CButton
+            color="secondary"
+            onClick={register}
+          >
+            註冊
+          </CButton>
           <Web3Button
             contractAddress={TICKET_FACTORY_ADDRESS}
-            action={buyTicket}
-
+            action={verify_buy}
             onSuccess={() => {
               Swal.fire({
                 icon: 'success',
