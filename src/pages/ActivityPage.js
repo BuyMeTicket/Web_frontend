@@ -22,6 +22,7 @@ const ActivityPage = () => {
   const { id } = useParams()
   const address = useAddress()
   const [activity, setActivity] = useState(null)
+  const [isRegistered, setIsRegistered] = useState(false);
   const [isModal, setIsModal] = useState(false)
   const [ticket, setTicket] = useState(null)
   const [quantity, setQuantity] = useState(0)
@@ -74,6 +75,21 @@ const ActivityPage = () => {
     }
     setQuantity(e.target.value)
   }
+
+  const checkRegister = async () => {
+    const alias = activity.title+address;
+    console.log(alias);
+    // Create token - Call your node backend to retrieve a token that we can use client-side to register a passkey to an alias
+    try {
+      await backend_uri.get('/create-token', { params: { alias: alias } })
+      console.log("Successfully registered WebAuthn!")
+      return true;
+    } catch (e) {
+      console.error("Our backend failed while creating a token!", e)
+      return false;
+    }
+  }
+
   const register = async () => {
     const alias = activity.title+address;
     const p = new Passwordless.Client({
@@ -81,13 +97,14 @@ const ActivityPage = () => {
         apiKey: API_KEY
     });
     // Create token - Call your node backend to retrieve a token that we can use client-side to register a passkey to an alias
-    const backendRequest = await backend_uri.get('/create-token', { params: { alias: alias } })
-    console.log(backendRequest);
-    const backendResponse = backendRequest.data;
-    if (!backendRequest.status===200) {
-        console.log("Our backend failed while creating a token!")
-        return;
-    }
+    try {
+      const backendRequest = await backend_uri.get('/create-token', { params: { alias: alias } })
+      console.log(backendRequest);
+      const backendResponse = backendRequest.data;
+      if (!backendRequest.status===200) {
+          console.log("Our backend failed while creating a token!")
+          return false;
+      }
 
     // Register a key - The Passwordless API and browser creates and stores a passkey, based on the token.
     try {
@@ -99,6 +116,9 @@ const ActivityPage = () => {
                 showConfirmButton: false,
                 timer: 1500
             })
+            console.log("Successfully registered WebAuthn!")
+            setIsRegistered(true);
+            return true;
             //add address to backend whitelist
         } else {
             console.log("Failed to register WebAuthn!", err)
@@ -107,6 +127,7 @@ const ActivityPage = () => {
                 title: 'Oops...',
                 text: 'Failed to register WebAuthn!',
             })
+            return false;
         }
         // Done - the user can now sign in using the passkey
     } catch (e) {
@@ -116,7 +137,17 @@ const ActivityPage = () => {
             title: 'Oops...',
             text: 'Things went bad',
         })
+        return false;
     }
+  } catch (e) {
+    console.error("Our backend failed while creating a token!", e)
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Our backend failed while creating a token!',
+    })
+    return false;
+  }
 }
 const verify_buy = async () => {
     const alias = activity.title+address;
@@ -167,11 +198,23 @@ const verify_buy = async () => {
         })
     }
 }
+  const checkRegistrationStatus = async () => {
+    console.log("Checking registration status...");
+    const registered = await checkRegister();
+    console.log(registered);
+    setIsRegistered(registered);
+  };
   
   useEffect(() => {
     getActivity()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+  useEffect(() => {
+    if (activity) {
+      checkRegistrationStatus();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activity])
   return (
     <>
       {ticket && <CModal size="md" visible={isModal} onClose={closeModal} alignment="center" className='text-black'>
@@ -196,36 +239,21 @@ const verify_buy = async () => {
           >
             取消
           </CButton>
-          <CButton
+          {isRegistered ? (<CButton
             color="secondary"
             onClick={register}
           >
             註冊
           </CButton>
+          ):(
           <Web3Button
             contractAddress={TICKET_FACTORY_ADDRESS}
             action={verify_buy}
-            onSuccess={() => {
-              Swal.fire({
-                icon: 'success',
-                title: 'NFT has been successfully minted',
-                showConfirmButton: false,
-                timer: 1500
-              })
-              closeModal();
-              navigate("/Ticket/Own");
-            }}
-            onError={() => {
-              Swal.fire({
-                icon: 'error',
-                title: 'Mint failed',
-              })
-              closeModal();
-            }}
             isDisabled={quantity === 0}
           >
             確認購買
           </Web3Button>
+          )}
         </CModalFooter>
       </CModal>}
       {activity ? <div className='container card p-4 w-75'>

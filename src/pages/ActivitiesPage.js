@@ -109,7 +109,6 @@ const Activities = () => {
                         </CCol>
                         <CCol xs={4} className='p-0'>
                           <p className=' d-flex flex-column align-items-end justify-content-end'>
-
                             <span className='mb-1'>
                               {activity.watches} <CIcon icon='cil-user' />
                             </span>
