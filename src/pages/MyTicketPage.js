@@ -56,8 +56,8 @@ function MyTicketPage() {
         setQrCodeValue(encryptedData);
         setSelectedTicket(ticket)
     }
-    const verifySignin = async () => {
-        const alias = address;
+    const verifySignin = async (prefix) => {
+        const alias = prefix+address;
         const p = new Passwordless.Client({
             apiKey: API_KEY,
         });
@@ -95,7 +95,7 @@ function MyTicketPage() {
         }
     }
     const showTicket = async (ticket) => {
-        await verifySignin();
+        await verifySignin(ticket.activity.title);
         await handleSelectedTicket(ticket);
         setIsModal(true)
         // Clear any existing timeout
@@ -247,7 +247,7 @@ function MyTicketPage() {
                                                 </p>
                                             </CCol>
                                             <CCol xs={5} className='d-flex flex-column justify-content-center align-items-center'>
-                                                {(ticket.status === 'available' && canRefund) ? (
+                                                {(ticket.status === 'available' && !canRefund) ? (
                                                     <Web3Button
                                                         contractAddress={TICKET_FACTORY_ADDRESS}
                                                         action={async () => {

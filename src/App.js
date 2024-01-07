@@ -17,8 +17,6 @@ import MyFund from './pages/MyFundPage';
 // import Airdrop from './pages/AirdropPage';
 //LeaderBoard
 // import LeaderBoard from './pages/LeaderBoardPage';
-import SBT from './pages/SBTPage';
-import Whitelist from './pages/WhitelistPage';
 import MyTicket from './pages/MyTicketPage';
 import Faucet from './pages/Faucet';
 import Navbar from './components/Navbar';
@@ -50,8 +48,6 @@ function App() {
                     <Route path="/Faucet" element={<Faucet />} />
                     {/* <Route path="/Airdrops" element={<MyAirdrops />} />
                     <Route path="/Airdrop/:target/:id" element={<Airdrop />} /> */}
-                    <Route path="/SBT" element={<SBT />} />
-                    <Route path="/Whitelist" element={<Whitelist />} />
                     <Route path="/Ticket/Own" element={<MyTicket />} />
                     <Route path="*" element={<Navigate to="/" />} />
                 </Routes>

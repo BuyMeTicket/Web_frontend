@@ -18,7 +18,6 @@ const AppHeaderDropdown = () => {
   const { contract: GlobalContract } = useContract(GLOBAL_ADDRESS);
   const {
     data: isEventHolder,
-    isLoading: loadingIsEventHolder
   } = useContractRead(GlobalContract, "isEventHolders", [address])
   const disconnect = useDisconnect();
   return (
@@ -30,10 +29,6 @@ const AppHeaderDropdown = () => {
       </CDropdownToggle>
       {isEventHolder ? (<CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Your Space</CDropdownHeader>
-        <CDropdownItem component={Link} to="/Whitelist">
-          {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
-          Get Whitelist
-        </CDropdownItem>
         <CDropdownItem component={Link} to="/Activity/Own">
           {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
           My Activities
@@ -42,11 +37,6 @@ const AppHeaderDropdown = () => {
         <CDropdownItem component={Link} to="/Pool/Own">
           {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
           My Pool
-        </CDropdownItem>
-
-        <CDropdownItem component={Link} to="/Airdrops">
-          {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
-          My Airdrop
         </CDropdownItem>
         <CDropdownItem component={Link} to="/Ticket/Own">
           {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
@@ -69,11 +59,6 @@ const AppHeaderDropdown = () => {
       ):(
         <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-light fw-semibold py-2">Your Space</CDropdownHeader>
-        <CDropdownItem component={Link} to="/Whitelist">
-          {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
-          Get Whitelist
-        </CDropdownItem>
-        
         <CDropdownItem component={Link} to="/Ticket/Own">
           {/* <CIcon icon="cil-user" name="cil-user" className="me-2" /> */}
           My Ticket
